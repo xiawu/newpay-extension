@@ -25,6 +25,7 @@ const uglify = require('gulp-uglify-es').default
 const pify = require('pify')
 const gulpMultiProcess = require('gulp-multi-process')
 const endOfStream = pify(require('end-of-stream'))
+const sesify = require('sesify')
 
 const packageJSON = require('./package.json')
 const dependencies = Object.keys(packageJSON && packageJSON.dependencies || {})
@@ -489,13 +490,59 @@ function zipTask (target) {
 
 function generateBundler (opts, performBundle) {
   const browserifyOpts = assign({}, watchify.args, {
-    plugin: 'browserify-derequire',
+    plugin: [],
     debug: opts.buildSourceMaps,
     fullPaths: opts.buildWithFullPaths,
   })
 
   if (!opts.buildLib) {
     browserifyOpts['entries'] = [opts.filepath]
+  }
+
+  const activateSesify = ['background.js'].includes(opts.filename)
+  const sesifyConfigFile = activateSesify && `./sesify/${opts.filename}`
+  const activateAutoConfig = true
+
+  if (!activateSesify) {
+    browserifyOpts.plugin.push('browserify-derequire')
+  }
+
+  if (activateSesify) {
+    // trackings sourcemaps via an index for now
+    let sourcemapIndex = 0
+    browserifyOpts.plugin.push([sesify, {
+      // provide as a fn so we can always get latest
+      // endowmentsConfig: () => {
+      //   // hack to get watchify to watch the config file for changes
+      //   setTimeout(() => {
+      //     bundler.emit('file', sesifyConfigFile)
+      //   })
+      //   // load latest config
+      //   return fs.readFileSync(sesifyConfigFile, 'utf8')
+      // },
+      // hook for getting tofu analysis
+      // autoConfig: writeAutoConfig,
+      writeAutoConfig: `./sesify/tofu-${opts.filename}`,
+      // hook for writing sourcemaps
+      onSourcemap: (dep, bundle) => {
+        if (!bundle.maps) return
+        // prepare directory for sourcemaps
+        // const dirPath = `dist/sourceMaps/`
+        const dirPath = `dist/chrome/`
+        mkdirp.sync(dirPath)
+        // create soucemap file name
+        const prefix = opts.filename.split('.')[0]
+        const filename = `${prefix}-${sourcemapIndex}.map`
+        const filePath = `${dirPath}${filename}`
+        sourcemapIndex++
+        // write sourcemap
+        const content = JSON.stringify(bundle.maps)
+        // const content = convertSourceMap.fromObject(bundle.maps).toJSON()
+        fs.writeFileSync(filePath, content)
+        // tell the bundler what to reference
+        return `./${filename}`
+      },
+    }])
   }
 
   let bundler = browserify(browserifyOpts)
@@ -559,13 +606,13 @@ function discTask (opts) {
 
 
 function bundleTask (opts) {
-  const bundler = generateBundler(opts, performBundle)
-  // output build logs to terminal
-  bundler.on('log', gutil.log)
-
   return performBundle
 
   function performBundle () {
+    const bundler = generateBundler(opts, performBundle)
+    // output build logs to terminal
+    bundler.on('log', gutil.log)
+    
     let buildStream = bundler.bundle()
 
     // handle errors

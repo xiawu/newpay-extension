@@ -43,7 +43,8 @@
     "version:bump": "node development/run-version-bump.js",
     "storybook": "start-storybook -p 6006 -c .storybook",
     "update-changelog": "./development/auto-changelog.sh",
-    "rollback": "./development/rollback.sh"
+    "rollback": "./development/rollback.sh",
+    "sesify": "browserify -p [ sesify --writeAutoConfig ./sesify/tofu-background.js ] app/scripts/background.js > /dev/null"
   },
   "browserify": {
     "transform": [
@@ -292,6 +293,7 @@
     "rimraf": "^2.6.2",
     "sass-loader": "^7.0.1",
     "selenium-webdriver": "^3.5.0",
+    "sesify": "^1.1.1",
     "shell-parallel": "1.0.3",
     "sinon": "^5.0.0",
     "source-map": "^0.7.2",
