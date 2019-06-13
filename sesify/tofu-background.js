@@ -7,7 +7,6 @@
         "asmcrypto.js": true,
         "assert": true,
         "await-semaphore": true,
-        "babel-runtime": true,
         "bignumber.js": true,
         "bn.js": true,
         "browserify-unibabel": true,
@@ -212,7 +211,8 @@
     },
     "bignumber.js": {
       "globals": {
-        "crypto": true
+        "crypto": true,
+        "window": true
       },
       "modules": {
         "crypto-browserify": true
@@ -954,7 +954,6 @@
       },
       "modules": {
         "async": true,
-        "babel-runtime": true,
         "promise-to-callback": true,
         "safe-event-emitter": true
       }
@@ -1073,7 +1072,6 @@
         "window": true
       },
       "modules": {
-        "babel-runtime": true,
         "events": true,
         "stream-browserify": true,
         "through2": true,

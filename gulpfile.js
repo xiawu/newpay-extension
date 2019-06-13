@@ -512,6 +512,8 @@ function generateBundler (opts, performBundle) {
     let sourcemapIndex = 0
     browserifyOpts.plugin.push([sesify, {
       // provide as a fn so we can always get latest
+      config: './sesify/tofu-background.js',
+      configOverride: './sesify/tofu-background-override.js',
       // endowmentsConfig: () => {
       //   // hack to get watchify to watch the config file for changes
       //   setTimeout(() => {
@@ -522,7 +524,7 @@ function generateBundler (opts, performBundle) {
       // },
       // hook for getting tofu analysis
       // autoConfig: writeAutoConfig,
-      writeAutoConfig: `./sesify/tofu-${opts.filename}`,
+      // writeAutoConfig: `./sesify/tofu-${opts.filename}`,
       // hook for writing sourcemaps
       onSourcemap: (dep, bundle) => {
         if (!bundle.maps) return
@@ -548,11 +550,11 @@ function generateBundler (opts, performBundle) {
   let bundler = browserify(browserifyOpts)
 
   if (opts.buildLib) {
-    bundler = bundler.require(opts.dependenciesToBundle)
+    bundler.require(opts.dependenciesToBundle)
   }
 
   if (opts.externalDependencies) {
-    bundler = bundler.external(opts.externalDependencies)
+    bundler.external(opts.externalDependencies)
   }
 
   // inject variables into bundle
@@ -567,7 +569,7 @@ function generateBundler (opts, performBundle) {
   })
 
   if (opts.watch) {
-    bundler = watchify(bundler)
+    watchify(bundler)
     // on any file update, re-runs the bundler
     bundler.on('update', async (ids) => {
       const stream = performBundle()
@@ -641,12 +643,12 @@ function bundleTask (opts) {
 
     // Minification
     if (opts.minifyBuild) {
-      buildStream = buildStream
-      .pipe(uglify({
-        mangle: {
-          reserved: [ 'MetamaskInpageProvider' ],
-        },
-      }))
+      // buildStream = buildStream
+      // .pipe(uglify({
+      //   mangle: {
+      //     reserved: [ 'MetamaskInpageProvider' ],
+      //   },
+      // }))
     }
 
     // Finalize Source Maps (writes .map file)
