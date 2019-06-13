@@ -49,7 +49,6 @@
   "browserify": {
     "transform": [
       "babelify",
-      "reactify",
       "brfs"
     ]
   },
