@@ -3,9 +3,10 @@
     [
       "env",
       {
+        "useBuiltIns": false,
         "targets": {
           "browsers": [
-            ">0.25%",
+            ">2%",
             "not ie 11",
             "not op_mini all"
           ]
@@ -13,11 +14,7 @@
       }
     ],
     "react",
-    "stage-0"
+    "stage-2"
   ],
-  "plugins": [
-    "transform-runtime",
-    "transform-async-to-generator",
-    "transform-class-properties"
-  ]
+  "plugins": []
 }
