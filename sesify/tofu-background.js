@@ -68,12 +68,14 @@
       }
     },
     "@babel/runtime": {
+      "environment": "unfrozen",
       "modules": {
         "babel-runtime": true,
         "regenerator-runtime": true
       }
     },
     "@sentry/browser": {
+      "environment": "unfrozen",
       "globals": {
         "DOMError": true,
         "DOMException": true,
@@ -84,8 +86,7 @@
         "XMLHttpRequest": true,
         "clearTimeout": true,
         "document": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "@sentry/core": true,
@@ -93,6 +94,7 @@
       }
     },
     "@sentry/core": {
+      "environment": "unfrozen",
       "globals": {
         "clearTimeout": true,
         "console.log": true,
@@ -120,8 +122,7 @@
     },
     "@sentry/utils": {
       "globals": {
-        "console.error": true,
-        "window": true
+        "console.error": true
       },
       "modules": {
         "process": true
@@ -133,6 +134,7 @@
       }
     },
     "aes-js": {
+      "environment": "unfrozen",
       "modules": {
         "buffer": true
       }
@@ -161,9 +163,6 @@
       }
     },
     "assert": {
-      "globals": {
-        "window": true
-      },
       "modules": {
         "util": true
       }
@@ -172,8 +171,7 @@
       "globals": {
         "clearTimeout": true,
         "console": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "lodash": true,
@@ -210,9 +208,9 @@
       }
     },
     "bignumber.js": {
+      "environment": "unfrozen",
       "globals": {
-        "crypto": true,
-        "window": true
+        "crypto": true
       },
       "modules": {
         "crypto-browserify": true
@@ -233,6 +231,7 @@
       }
     },
     "bn.js": {
+      "environment": "unfrozen",
       "modules": {
         "browser-resolve": true
       }
@@ -249,8 +248,7 @@
     "browser-passworder": {
       "globals": {
         "btoa": true,
-        "crypto.subtle.decrypt": true,
-        "window": true
+        "crypto.subtle.decrypt": true
       },
       "modules": {
         "browserify-unibabel": true
@@ -331,6 +329,7 @@
       }
     },
     "buffer": {
+      "environment": "unfrozen",
       "globals": {
         "console": true
       },
@@ -362,6 +361,9 @@
         "string_decoder": true
       }
     },
+    "class-is": {
+      "environment": "unfrozen"
+    },
     "clone": {
       "modules": {
         "buffer": true
@@ -385,17 +387,18 @@
       }
     },
     "cookiejar": {
+      "environment": "unfrozen",
       "globals": {
         "console.warn": true
       }
     },
     "core-js": {
+      "environment": "unfrozen",
       "globals": {
         "PromiseRejectionEvent": true,
         "document.createTextNode": true,
         "postMessage": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "browser-resolve": true
@@ -454,6 +457,9 @@
         "randombytes": true,
         "randomfill": true
       }
+    },
+    "crypto-js": {
+      "environment": "unfrozen"
     },
     "debounce": {
       "globals": {
@@ -583,8 +589,7 @@
     "eth-json-rpc-middleware": {
       "globals": {
         "console.error": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "btoa": true,
@@ -823,11 +828,11 @@
     "extensionizer": {
       "globals": {
         "browser": true,
-        "chrome": true,
-        "window": true
+        "chrome": true
       }
     },
     "fast-json-patch": {
+      "environment": "unfrozen",
       "globals": {
         "addEventListener": true,
         "clearTimeout": true,
@@ -837,15 +842,14 @@
         "setTimeout": true
       },
       "modules": {
-        "deep-equal": true
+        "fast-deep-equal": true
       }
     },
     "fast-levenshtein": {
       "globals": {
         "Intl": true,
         "console.log": true,
-        "postMessage": true,
-        "window": true
+        "postMessage": true
       }
     },
     "fetch-ponyfill": {
@@ -931,6 +935,9 @@
         "punycode": true
       }
     },
+    "inherits": {
+      "environment": "unfrozen"
+    },
     "isomorphic-fetch": {
       "globals": {
         "fetch.bind": true
@@ -940,9 +947,9 @@
       }
     },
     "js-sha3": {
+      "environment": "unfrozen",
       "globals": {
-        "navigator.userAgent.indexOf": true,
-        "window": true
+        "navigator.userAgent.indexOf": true
       },
       "modules": {
         "process": true
@@ -974,6 +981,7 @@
       }
     },
     "jsonschema": {
+      "environment": "unfrozen",
       "modules": {
         "url": true
       }
@@ -990,16 +998,6 @@
         "browserify-sha3": true
       }
     },
-    "lodash": {
-      "globals": {
-        "window": true
-      }
-    },
-    "lodash.flatmap": {
-      "globals": {
-        "window": true
-      }
-    },
     "loglevel": {
       "globals": {
         "console": true,
@@ -1008,6 +1006,7 @@
       }
     },
     "luxon": {
+      "environment": "unfrozen",
       "globals": {
         "Intl": true
       }
@@ -1068,9 +1067,6 @@
       }
     },
     "obs-store": {
-      "globals": {
-        "window": true
-      },
       "modules": {
         "events": true,
         "stream-browserify": true,
@@ -1099,9 +1095,6 @@
       }
     },
     "pbkdf2": {
-      "globals": {
-        "window": true
-      },
       "modules": {
         "create-hash": true,
         "process": true,
@@ -1156,24 +1149,13 @@
         "process": true
       }
     },
-    "punycode": {
-      "globals": {
-        "window": true
-      }
-    },
     "randombytes": {
-      "globals": {
-        "window": true
-      },
       "modules": {
         "process": true,
         "safe-buffer": true
       }
     },
     "randomfill": {
-      "globals": {
-        "window": true
-      },
       "modules": {
         "process": true,
         "randombytes": true,
@@ -1181,9 +1163,6 @@
       }
     },
     "readable-stream": {
-      "globals": {
-        "window": true
-      },
       "modules": {
         "browser-resolve": true,
         "core-util-is": true,
@@ -1197,6 +1176,9 @@
         "timers-browserify": true,
         "util-deprecate": true
       }
+    },
+    "regenerator-runtime": {
+      "environment": "unfrozen"
     },
     "ripemd160": {
       "modules": {
@@ -1277,8 +1259,7 @@
     },
     "stream-http": {
       "globals": {
-        "Blob": true,
-        "window": true
+        "Blob": true
       },
       "modules": {
         "buffer": true,
@@ -1320,8 +1301,7 @@
         "clearInterval": true,
         "clearTimeout": true,
         "setInterval": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "process": true
@@ -1353,8 +1333,7 @@
         "open": true,
         "removeEventListener": true,
         "setInterval": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "@babel/runtime": true,
@@ -1380,23 +1359,20 @@
         "browser-resolve": true
       }
     },
+    "unorm": {
+      "environment": "unfrozen"
+    },
     "url": {
       "modules": {
         "punycode": true,
         "querystring-es3": true
       }
     },
-    "utf8": {
-      "globals": {
-        "window": true
-      }
-    },
     "util": {
       "globals": {
         "console.error": true,
         "console.log": true,
-        "console.trace": true,
-        "window": true
+        "console.trace": true
       },
       "modules": {
         "inherits": true,
@@ -1406,15 +1382,13 @@
     "util-deprecate": {
       "globals": {
         "console.trace": true,
-        "console.warn": true,
-        "window": true
+        "console.warn": true
       }
     },
     "uuid": {
       "globals": {
         "crypto": true,
-        "msCrypto": true,
-        "window": true
+        "msCrypto": true
       }
     },
     "vm-browserify": {
@@ -1425,6 +1399,7 @@
       }
     },
     "web3": {
+      "environment": "unfrozen",
       "globals": {
         "XMLHttpRequest": true,
         "clearTimeout": true,
@@ -1442,13 +1417,13 @@
       }
     },
     "web3-provider-engine": {
+      "environment": "unfrozen",
       "globals": {
         "console": true,
         "console.error": true,
         "console.warn": true,
         "setInterval": true,
-        "setTimeout": true,
-        "window": true
+        "setTimeout": true
       },
       "modules": {
         "async": true,
@@ -1472,6 +1447,7 @@
       }
     },
     "whatwg-fetch": {
+      "environment": "unfrozen",
       "globals": {
         "Blob": true,
         "DOMException": true,
@@ -1491,6 +1467,7 @@
       }
     },
     "xhr2-cookies": {
+      "environment": "unfrozen",
       "globals": {
         "console.warn": true
       },
