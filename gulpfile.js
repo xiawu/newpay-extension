@@ -508,6 +508,10 @@ function generateBundler (opts, performBundle) {
   }
 
   if (activateSesify) {
+    browserifyOpts.plugin.push(['deps-dump', {
+      filename: `./sesify/deps-${opts.filename}on`,
+    }])
+
     // trackings sourcemaps via an index for now
     let sourcemapIndex = 0
     browserifyOpts.plugin.push([sesify, {
@@ -524,7 +528,7 @@ function generateBundler (opts, performBundle) {
       // },
       // hook for getting tofu analysis
       // autoConfig: writeAutoConfig,
-      // writeAutoConfig: `./sesify/tofu-${opts.filename}`,
+      writeAutoConfig: `./sesify/tofu-${opts.filename}`,
       // hook for writing sourcemaps
       onSourcemap: (dep, bundle) => {
         if (!bundle.maps) return
