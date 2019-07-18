@@ -1194,6 +1194,10 @@
       }
     },
     "safe-buffer": {
+      "globals": {
+        "console.log": true,
+        "console.trace": true
+      },
       "modules": {
         "buffer": true
       }
