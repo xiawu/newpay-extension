@@ -516,8 +516,8 @@ function generateBundler (opts, performBundle) {
     let sourcemapIndex = 0
     browserifyOpts.plugin.push([sesify, {
       // provide as a fn so we can always get latest
-      config: './sesify/tofu-background.js',
-      configOverride: './sesify/tofu-background-override.js',
+      config: './sesify/background.json',
+      configOverride: './sesify/background-override.json',
       // endowmentsConfig: () => {
       //   // hack to get watchify to watch the config file for changes
       //   setTimeout(() => {
@@ -528,7 +528,7 @@ function generateBundler (opts, performBundle) {
       // },
       // hook for getting tofu analysis
       // autoConfig: writeAutoConfig,
-      writeAutoConfig: `./sesify/tofu-${opts.filename}`,
+      writeAutoConfig: `./sesify/${opts.filename}on`,
       // hook for writing sourcemaps
       onSourcemap: (dep, bundle) => {
         if (!bundle.maps) return

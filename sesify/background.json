@@ -81,6 +81,7 @@
         "DOMException": true,
         "ErrorEvent": true,
         "Headers": true,
+        "RegExp": true,
         "Request": true,
         "Response": true,
         "XMLHttpRequest": true,
@@ -169,6 +170,7 @@
     },
     "async": {
       "globals": {
+        "RegExp": true,
         "clearTimeout": true,
         "console": true,
         "setTimeout": true
@@ -210,6 +212,7 @@
     "bignumber.js": {
       "environment": "unfrozen",
       "globals": {
+        "RegExp": true,
         "crypto": true
       },
       "modules": {
@@ -365,6 +368,9 @@
       "environment": "unfrozen"
     },
     "clone": {
+      "globals": {
+        "RegExp": true
+      },
       "modules": {
         "buffer": true
       }
@@ -475,6 +481,9 @@
       }
     },
     "deep-extend": {
+      "globals": {
+        "RegExp": true
+      },
       "modules": {
         "buffer": true
       }
@@ -742,6 +751,9 @@
       }
     },
     "ethjs-abi": {
+      "globals": {
+        "RegExp": true
+      },
       "modules": {
         "bn.js": true,
         "buffer": true,
@@ -829,6 +841,11 @@
       "globals": {
         "browser": true,
         "chrome": true
+      }
+    },
+    "fast-deep-equal": {
+      "globals": {
+        "RegExp": true
       }
     },
     "fast-json-patch": {
@@ -982,6 +999,9 @@
     },
     "jsonschema": {
       "environment": "unfrozen",
+      "globals": {
+        "RegExp": true
+      },
       "modules": {
         "url": true
       }
@@ -998,6 +1018,11 @@
         "browserify-sha3": true
       }
     },
+    "lodash.flatmap": {
+      "globals": {
+        "RegExp": true
+      }
+    },
     "loglevel": {
       "globals": {
         "console": true,
@@ -1008,7 +1033,8 @@
     "luxon": {
       "environment": "unfrozen",
       "globals": {
-        "Intl": true
+        "Intl": true,
+        "RegExp": true
       }
     },
     "md5.js": {
@@ -1025,6 +1051,9 @@
       }
     },
     "multibase": {
+      "globals": {
+        "RegExp": true
+      },
       "modules": {
         "base-x": true,
         "buffer": true
@@ -1149,6 +1178,11 @@
         "process": true
       }
     },
+    "ramda": {
+      "globals": {
+        "RegExp": true
+      }
+    },
     "randombytes": {
       "modules": {
         "process": true,
@@ -1194,10 +1228,6 @@
       }
     },
     "safe-buffer": {
-      "globals": {
-        "console.log": true,
-        "console.trace": true
-      },
       "modules": {
         "buffer": true
       }
@@ -1316,6 +1346,11 @@
         "buffer": true
       }
     },
+    "traverse": {
+      "globals": {
+        "RegExp": true
+      }
+    },
     "trezor-connect": {
       "globals": {
         "addEventListener": true,
@@ -1374,6 +1409,7 @@
     },
     "util": {
       "globals": {
+        "RegExp": true,
         "console.error": true,
         "console.log": true,
         "console.trace": true

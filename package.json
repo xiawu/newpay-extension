@@ -44,7 +44,8 @@
     "storybook": "start-storybook -p 6006 -c .storybook",
     "update-changelog": "./development/auto-changelog.sh",
     "rollback": "./development/rollback.sh",
-    "sesify": "browserify -p [ sesify --writeAutoConfig ./sesify/tofu-background.js ] app/scripts/background.js > /dev/null"
+    "sesify-config": "browserify -p [ sesify --writeAutoConfig ./sesify/background.json ] app/scripts/background.js > /dev/null",
+    "sesify-build": "browserify -p [ sesify --config ./sesify/background.json ] app/scripts/background.js > dist/chrome/background.js"
   },
   "browserify": {
     "transform": [
