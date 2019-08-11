@@ -561,6 +561,10 @@ function generateBundler (opts, performBundle) {
     bundler.external(opts.externalDependencies)
   }
 
+  bundler.transform('babelify')
+  bundler.transform('brfs')
+  bundler.transform('browserify-transform-protoype-prop-define', { global: true })
+
   // inject variables into bundle
   bundler.transform(envify({
     METAMASK_DEBUG: opts.devMode,

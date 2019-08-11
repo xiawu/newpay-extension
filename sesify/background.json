@@ -68,7 +68,6 @@
       }
     },
     "@babel/runtime": {
-      "environment": "unfrozen",
       "modules": {
         "babel-runtime": true,
         "regenerator-runtime": true
@@ -135,7 +134,6 @@
       }
     },
     "aes-js": {
-      "environment": "unfrozen",
       "modules": {
         "buffer": true
       }
@@ -234,7 +232,6 @@
       }
     },
     "bn.js": {
-      "environment": "unfrozen",
       "modules": {
         "browser-resolve": true
       }
@@ -332,7 +329,6 @@
       }
     },
     "buffer": {
-      "environment": "unfrozen",
       "globals": {
         "console": true
       },
@@ -363,9 +359,6 @@
         "stream-browserify": true,
         "string_decoder": true
       }
-    },
-    "class-is": {
-      "environment": "unfrozen"
     },
     "clone": {
       "globals": {
@@ -952,9 +945,6 @@
         "punycode": true
       }
     },
-    "inherits": {
-      "environment": "unfrozen"
-    },
     "isomorphic-fetch": {
       "globals": {
         "fetch.bind": true
@@ -964,7 +954,6 @@
       }
     },
     "js-sha3": {
-      "environment": "unfrozen",
       "globals": {
         "navigator.userAgent.indexOf": true
       },
@@ -998,7 +987,6 @@
       }
     },
     "jsonschema": {
-      "environment": "unfrozen",
       "globals": {
         "RegExp": true
       },
@@ -1398,9 +1386,6 @@
         "browser-resolve": true
       }
     },
-    "unorm": {
-      "environment": "unfrozen"
-    },
     "url": {
       "modules": {
         "punycode": true,
@@ -1439,7 +1424,6 @@
       }
     },
     "web3": {
-      "environment": "unfrozen",
       "globals": {
         "XMLHttpRequest": true,
         "clearTimeout": true,
@@ -1457,7 +1441,6 @@
       }
     },
     "web3-provider-engine": {
-      "environment": "unfrozen",
       "globals": {
         "console": true,
         "console.error": true,
@@ -1487,7 +1470,6 @@
       }
     },
     "whatwg-fetch": {
-      "environment": "unfrozen",
       "globals": {
         "Blob": true,
         "DOMException": true,
