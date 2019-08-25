@@ -9,6 +9,11 @@
       "globals": {
         "localStorage": true
       }
+    },
+    "web3": {
+      "globals": {
+        "Web3": "write"
+      }
     }
   }
 }
