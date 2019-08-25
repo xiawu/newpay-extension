@@ -2,7 +2,6 @@
   "resources": {
     "<root>": {
       "modules": {
-        "@sentry/browser": true,
         "abi-decoder": true,
         "asmcrypto.js": true,
         "assert": true,
@@ -73,59 +72,6 @@
         "regenerator-runtime": true
       }
     },
-    "@sentry/browser": {
-      "globals": {
-        "DOMError": true,
-        "DOMException": true,
-        "ErrorEvent": true,
-        "Headers": true,
-        "RegExp": true,
-        "Request": true,
-        "Response": true,
-        "XMLHttpRequest": true,
-        "clearTimeout": true,
-        "document": true,
-        "setTimeout": true
-      },
-      "modules": {
-        "@sentry/core": true,
-        "process": true
-      }
-    },
-    "@sentry/core": {
-      "globals": {
-        "clearTimeout": true,
-        "console.log": true,
-        "setTimeout": true
-      },
-      "modules": {
-        "@sentry/hub": true,
-        "@sentry/minimal": true,
-        "@sentry/types": true,
-        "@sentry/utils": true
-      }
-    },
-    "@sentry/hub": {
-      "globals": {
-        "setTimeout": true
-      },
-      "modules": {
-        "@sentry/utils": true
-      }
-    },
-    "@sentry/minimal": {
-      "modules": {
-        "@sentry/hub": true
-      }
-    },
-    "@sentry/utils": {
-      "globals": {
-        "console.error": true
-      },
-      "modules": {
-        "process": true
-      }
-    },
     "abi-decoder": {
       "modules": {
         "web3-eth-abi": true,
@@ -168,7 +114,6 @@
     },
     "async": {
       "globals": {
-        "RegExp": true,
         "clearTimeout": true,
         "console": true,
         "setTimeout": true
@@ -209,7 +154,6 @@
     },
     "bignumber.js": {
       "globals": {
-        "RegExp": true,
         "crypto": true
       },
       "modules": {
@@ -360,9 +304,6 @@
       }
     },
     "clone": {
-      "globals": {
-        "RegExp": true
-      },
       "modules": {
         "buffer": true
       }
@@ -375,10 +316,8 @@
       }
     },
     "content-hash": {
-      "globals": {
-        "console.warn": true
-      },
       "modules": {
+        "buffer": true,
         "cids": true,
         "multicodec": true,
         "multihashes": true
@@ -392,6 +331,8 @@
     "core-js": {
       "globals": {
         "PromiseRejectionEvent": true,
+        "__e": true,
+        "__g": true,
         "document.createTextNode": true,
         "postMessage": true,
         "setTimeout": true
@@ -468,9 +409,6 @@
       }
     },
     "deep-extend": {
-      "globals": {
-        "RegExp": true
-      },
       "modules": {
         "buffer": true
       }
@@ -584,7 +522,9 @@
     },
     "eth-json-rpc-middleware": {
       "globals": {
+        "address": true,
         "console.error": true,
+        "message": true,
         "setTimeout": true
       },
       "modules": {
@@ -646,6 +586,9 @@
       }
     },
     "eth-sig-util": {
+      "globals": {
+        "sanitizedData": true
+      },
       "modules": {
         "buffer": true,
         "ethereumjs-abi": true,
@@ -720,7 +663,6 @@
     },
     "ethers": {
       "globals": {
-        "RegExp": true,
         "console.log": true,
         "name": true
       },
@@ -749,9 +691,6 @@
       }
     },
     "ethjs-abi": {
-      "globals": {
-        "RegExp": true
-      },
       "modules": {
         "bn.js": true,
         "buffer": true,
@@ -841,11 +780,6 @@
         "chrome": true
       }
     },
-    "fast-deep-equal": {
-      "globals": {
-        "RegExp": true
-      }
-    },
     "fast-json-patch": {
       "globals": {
         "addEventListener": true,
@@ -861,8 +795,9 @@
     },
     "fast-levenshtein": {
       "globals": {
-        "Intl": true,
+        "Levenshtein": true,
         "console.log": true,
+        "importScripts": true,
         "postMessage": true
       }
     },
@@ -967,7 +902,9 @@
     },
     "json-rpc-engine": {
       "globals": {
-        "console.error": true
+        "console.error": true,
+        "regeneratorRuntime.mark": true,
+        "regeneratorRuntime.wrap": true
       },
       "modules": {
         "async": true,
@@ -991,9 +928,6 @@
       }
     },
     "jsonschema": {
-      "globals": {
-        "RegExp": true
-      },
       "modules": {
         "url": true
       }
@@ -1010,22 +944,12 @@
         "browserify-sha3": true
       }
     },
-    "lodash.flatmap": {
-      "globals": {
-        "RegExp": true
-      }
-    },
     "loglevel": {
       "globals": {
         "console": true,
         "document.cookie": true,
-        "localStorage": true
-      }
-    },
-    "luxon": {
-      "globals": {
-        "Intl": true,
-        "RegExp": true
+        "localStorage": true,
+        "log": true
       }
     },
     "md5.js": {
@@ -1042,9 +966,6 @@
       }
     },
     "multibase": {
-      "globals": {
-        "RegExp": true
-      },
       "modules": {
         "base-x": true,
         "buffer": true
@@ -1169,11 +1090,6 @@
         "process": true
       }
     },
-    "ramda": {
-      "globals": {
-        "RegExp": true
-      }
-    },
     "randombytes": {
       "modules": {
         "process": true,
@@ -1206,6 +1122,11 @@
         "string_decoder": true,
         "timers-browserify": true,
         "util-deprecate": true
+      }
+    },
+    "regenerator-runtime": {
+      "globals": {
+        "regeneratorRuntime": true
       }
     },
     "ripemd160": {
@@ -1340,13 +1261,9 @@
         "buffer": true
       }
     },
-    "traverse": {
-      "globals": {
-        "RegExp": true
-      }
-    },
     "trezor-connect": {
       "globals": {
+        "__TREZOR_CONNECT_SRC": true,
         "addEventListener": true,
         "btoa": true,
         "chrome": true,
@@ -1377,7 +1294,8 @@
     "tweetnacl": {
       "globals": {
         "crypto": true,
-        "msCrypto": true
+        "msCrypto": true,
+        "nacl": true
       },
       "modules": {
         "browser-resolve": true
@@ -1394,7 +1312,6 @@
     },
     "underscore": {
       "globals": {
-        "RegExp": true,
         "clearTimeout": true,
         "setTimeout": true
       }
@@ -1407,7 +1324,6 @@
     },
     "util": {
       "globals": {
-        "RegExp": true,
         "console.error": true,
         "console.log": true,
         "console.trace": true
@@ -1438,6 +1354,7 @@
     },
     "web3": {
       "globals": {
+        "Web3": true,
         "XMLHttpRequest": true,
         "clearTimeout": true,
         "console.error": true,
