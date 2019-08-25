@@ -74,7 +74,6 @@
       }
     },
     "@sentry/browser": {
-      "environment": "unfrozen",
       "globals": {
         "DOMError": true,
         "DOMException": true,
@@ -94,7 +93,6 @@
       }
     },
     "@sentry/core": {
-      "environment": "unfrozen",
       "globals": {
         "clearTimeout": true,
         "console.log": true,
@@ -130,10 +128,12 @@
     },
     "abi-decoder": {
       "modules": {
-        "web3": true
+        "web3-eth-abi": true,
+        "web3-utils": true
       }
     },
     "aes-js": {
+      "environment": "unfrozen",
       "modules": {
         "buffer": true
       }
@@ -208,7 +208,6 @@
       }
     },
     "bignumber.js": {
-      "environment": "unfrozen",
       "globals": {
         "RegExp": true,
         "crypto": true
@@ -386,13 +385,11 @@
       }
     },
     "cookiejar": {
-      "environment": "unfrozen",
       "globals": {
         "console.warn": true
       }
     },
     "core-js": {
-      "environment": "unfrozen",
       "globals": {
         "PromiseRejectionEvent": true,
         "document.createTextNode": true,
@@ -456,9 +453,6 @@
         "randombytes": true,
         "randomfill": true
       }
-    },
-    "crypto-js": {
-      "environment": "unfrozen"
     },
     "debounce": {
       "globals": {
@@ -724,6 +718,17 @@
         "uuid": true
       }
     },
+    "ethers": {
+      "globals": {
+        "RegExp": true,
+        "console.log": true,
+        "name": true
+      },
+      "modules": {
+        "bn.js": true,
+        "js-sha3": true
+      }
+    },
     "ethjs": {
       "globals": {
         "clearInterval": true,
@@ -842,7 +847,6 @@
       }
     },
     "fast-json-patch": {
-      "environment": "unfrozen",
       "globals": {
         "addEventListener": true,
         "clearTimeout": true,
@@ -1019,7 +1023,6 @@
       }
     },
     "luxon": {
-      "environment": "unfrozen",
       "globals": {
         "Intl": true,
         "RegExp": true
@@ -1184,6 +1187,12 @@
         "safe-buffer": true
       }
     },
+    "randomhex": {
+      "globals": {
+        "crypto": true,
+        "msCrypto": true
+      }
+    },
     "readable-stream": {
       "modules": {
         "browser-resolve": true,
@@ -1198,9 +1207,6 @@
         "timers-browserify": true,
         "util-deprecate": true
       }
-    },
-    "regenerator-runtime": {
-      "environment": "unfrozen"
     },
     "ripemd160": {
       "modules": {
@@ -1386,6 +1392,13 @@
         "browser-resolve": true
       }
     },
+    "underscore": {
+      "globals": {
+        "RegExp": true,
+        "clearTimeout": true,
+        "setTimeout": true
+      }
+    },
     "url": {
       "modules": {
         "punycode": true,
@@ -1428,7 +1441,6 @@
         "XMLHttpRequest": true,
         "clearTimeout": true,
         "console.error": true,
-        "console.warn": true,
         "setTimeout": true
       },
       "modules": {
@@ -1436,8 +1448,14 @@
         "buffer": true,
         "crypto-js": true,
         "utf8": true,
-        "xhr2": true,
         "xhr2-cookies": true
+      }
+    },
+    "web3-eth-abi": {
+      "modules": {
+        "ethers": true,
+        "underscore": true,
+        "web3-utils": true
       }
     },
     "web3-provider-engine": {
@@ -1469,6 +1487,20 @@
         "xtend": true
       }
     },
+    "web3-utils": {
+      "globals": {
+        "setTimeout": true
+      },
+      "modules": {
+        "bn.js": true,
+        "eth-lib": true,
+        "ethjs-unit": true,
+        "number-to-bn": true,
+        "randomhex": true,
+        "underscore": true,
+        "utf8": true
+      }
+    },
     "whatwg-fetch": {
       "globals": {
         "Blob": true,
@@ -1489,7 +1521,6 @@
       }
     },
     "xhr2-cookies": {
-      "environment": "unfrozen",
       "globals": {
         "console.warn": true
       },
