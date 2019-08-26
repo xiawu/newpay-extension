@@ -528,13 +528,12 @@ function generateBundler (opts, performBundle) {
       // },
       // hook for getting tofu analysis
       // autoConfig: writeAutoConfig,
-      writeAutoConfig: `./sesify/${opts.filename}on`,
+      // writeAutoConfig: `./sesify/${opts.filename}on`,
       // hook for writing sourcemaps
       onSourcemap: (dep, bundle) => {
         if (!bundle.maps) return
         // prepare directory for sourcemaps
-        // const dirPath = `dist/sourceMaps/`
-        const dirPath = `dist/chrome/`
+        const dirPath = `dist/sourcemaps/`
         mkdirp.sync(dirPath)
         // create soucemap file name
         const prefix = opts.filename.split('.')[0]
@@ -563,7 +562,10 @@ function generateBundler (opts, performBundle) {
 
   bundler.transform('babelify')
   bundler.transform('brfs')
-  bundler.transform('browserify-transform-protoype-prop-define', { global: true })
+
+  // if (activateSesify) {
+  //   bundler.transform('browserify-transform-protoype-prop-define', { global: true })
+  // }
 
   // inject variables into bundle
   bundler.transform(envify({
