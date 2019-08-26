@@ -1,5 +1,10 @@
 /*global Web3*/
+// need to make sure we aren't affected by overlapping namespaces
+// and that we dont affect the app with our namespace
+// mostly a fix for web3's BigNumber if AMD's "define" is defined...
+let __define
 cleanContextForImports()
+
 require('web3/dist/web3.min.js')
 const log = require('loglevel')
 const LocalMessageDuplexStream = require('post-message-stream')
@@ -161,11 +166,6 @@ inpageProvider.publicConfigStore.subscribe(function (state) {
     window.postMessage('onboardingcomplete', '*')
   }
 })
-
-// need to make sure we aren't affected by overlapping namespaces
-// and that we dont affect the app with our namespace
-// mostly a fix for web3's BigNumber if AMD's "define" is defined...
-let __define
 
 /**
  * Caches reference to global define object and deletes it to
