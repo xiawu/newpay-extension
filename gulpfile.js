@@ -22,7 +22,7 @@ const rtlcss = require('gulp-rtlcss')
 const rename = require('gulp-rename')
 const gulpMultiProcess = require('gulp-multi-process')
 const endOfStream = pify(require('end-of-stream'))
-const sesify = require('sesify')
+const lavamoat = require('lavamoat-browserify')
 const mkdirp = require('mkdirp')
 const imagemin = require('gulp-imagemin')
 const { makeStringTransform } = require('browserify-transform-tools')
@@ -220,7 +220,7 @@ gulp.task('manifest:testing', function () {
 })
 
 const scriptsToExcludeFromBackgroundDevBuild = {
-  'bg-libs.js': true,
+  // 'bg-libs.js': true,
 }
 
 gulp.task('manifest:testing-local', function () {
@@ -367,7 +367,7 @@ const buildJsFiles = [
 ]
 
 // bundle tasks
-createTasksForBuildJsDeps({ filename: 'bg-libs', key: 'background' })
+// createTasksForBuildJsDeps({ filename: 'bg-libs', key: 'background' })
 createTasksForBuildJsDeps({ filename: 'ui-libs', key: 'ui' })
 createTasksForBuildJsExtension({ buildJsFiles, taskPrefix: 'dev:extension:js', devMode: true })
 createTasksForBuildJsExtension({ buildJsFiles, taskPrefix: 'dev:test-extension:js', devMode: true, testing: 'true' })
@@ -476,7 +476,7 @@ gulp.task('build',
     'clean',
     'build:scss',
     gulpParallel(
-      'build:extension:js:deps:background',
+      // 'build:extension:js:deps:background',
       'build:extension:js:deps:ui',
       'build:extension:js',
       'copy'
@@ -490,7 +490,7 @@ gulp.task('build:test',
     'clean',
     'build:scss',
     gulpParallel(
-      'build:extension:js:deps:background',
+      // 'build:extension:js:deps:background',
       'build:extension:js:deps:ui',
       'build:test:extension:js',
       'copy'
@@ -526,19 +526,18 @@ function generateBundler (opts, performBundle) {
 
   const bundleName = opts.filename.split('.')[0]
 
-  // activate sesify
-  const activateAutoConfig = Boolean(process.env.SESIFY_AUTOGEN)
-  // const activateSesify = activateAutoConfig
-  const activateSesify = activateAutoConfig && ['background'].includes(bundleName)
-  if (activateSesify) {
-    configureBundleForSesify({ browserifyOpts, bundleName })
+  // activate lavamoat
+  const activateAutoConfig = Boolean(process.env.LAVAMOAT_AUTOGEN)
+  const activateLavamoat = ['background'].includes(bundleName)
+  if (activateLavamoat) {
+    configureBundleForLavamoat({ browserifyOpts, bundleName, activateAutoConfig })
   }
 
-  if (!activateSesify) {
+  if (!activateLavamoat) {
     browserifyOpts.plugin.push('browserify-derequire')
   }
 
-  if (!opts.buildLib) {
+  if (activateAutoConfig || !opts.buildLib) {
     if (opts.devMode && opts.filename === 'ui.js') {
       browserifyOpts['entries'] = ['./development/require-react-devtools.js', opts.filepath]
     } else {
@@ -560,6 +559,15 @@ function generateBundler (opts, performBundle) {
     })
     .transform('brfs')
 
+  if (activateLavamoat) {
+    // remove html comments that SES is alergic to
+    const removeHtmlComment = makeStringTransform('remove-html-comment', { excludeExtension: ['.json'] }, (content, _, cb) => {
+      const result = content.split('-->').join('-- >')
+      cb(null, result)
+    })
+    bundler.transform(removeHtmlComment, { global: true })
+  }
+
   if (opts.buildLib) {
     bundler = bundler.require(opts.dependenciesToBundle)
   }
@@ -580,6 +588,14 @@ function generateBundler (opts, performBundle) {
   })
 
   if (opts.watch) {
+    // trigger watchify rebuilds when config changes
+    if (activateLavamoat && !activateAutoConfig) {
+      setTimeout(() => {
+        bundler.emit('file', lavamoatConfigPath)
+        bundler.emit('file', lavamoatConfigOverridePath)
+      })
+    }
+
     bundler = watchify(bundler)
     // on any file update, re-runs the bundler
     bundler.on('update', async (ids) => {
@@ -632,15 +648,15 @@ function bundleTask (opts) {
         .pipe(sourcemaps.init({ loadMaps: true }))
     }
 
-    // Minification
-    if (opts.minifyBuild) {
-      buildStream = buildStream
-        .pipe(terser({
-          mangle: {
-            reserved: [ 'MetamaskInpageProvider' ],
-          },
-        }))
-    }
+    // // Minification
+    // if (opts.minifyBuild) {
+    //   buildStream = buildStream
+    //     .pipe(terser({
+    //       mangle: {
+    //         reserved: [ 'MetamaskInpageProvider' ],
+    //       },
+    //     }))
+    // }
 
     // Finalize Source Maps
     if (opts.buildSourceMaps) {
@@ -665,27 +681,40 @@ function bundleTask (opts) {
   }
 }
 
-function configureBundleForSesify ({
+function configureBundleForLavamoat ({
   browserifyOpts,
   bundleName,
+  activateAutoConfig,
 }) {
-  // add in sesify args for better globalRef usage detection
-  Object.assign(browserifyOpts, sesify.args)
-
-  // ensure browserify uses full paths
-  browserifyOpts.fullPaths = true
+  // add in lavamoat args for better globalRef usage detection
+  Object.assign(browserifyOpts, lavamoat.args)
 
   // record dependencies used in bundle
-  mkdirp.sync('./sesify')
+  mkdirp.sync('./lavamoat')
   browserifyOpts.plugin.push(['deps-dump', {
-    filename: `./sesify/deps-${bundleName}.json`,
+    filename: `./lavamoat/deps-${bundleName}.json`,
   }])
 
-  const sesifyConfigPath = `./sesify/${bundleName}.json`
-
-  // add sesify plugin
-  browserifyOpts.plugin.push([sesify, {
-    writeAutoConfig: sesifyConfigPath,
+  // add lavamoat plugin
+  browserifyOpts.plugin.push([lavamoat, {
+    writeAutoConfig: activateAutoConfig,
+    config: `./lavamoat/${bundleName}.json`,
+//     // hook for writing sourcemaps
+//     onSourcemap: (_, bundle) => {
+//       if (!bundle.maps) return
+//       // prepare directory for sourcemaps
+//       const dirPath = `dist/sourcemaps/`
+//       mkdirp.sync(dirPath)
+//       // create soucemap file name
+//       const filename = `${bundleName}-${sourcemapIndex}.map`
+//       const filePath = `${dirPath}${filename}`
+//       sourcemapIndex++
+//       // write sourcemap
+//       const content = JSON.stringify(bundle.maps)
+//       fs.writeFileSync(filePath, content)
+//       // tell the bundler what to reference
+//       return `./${filename}`
+//     },
   }])
 
   // remove html comments that SES is alergic to
