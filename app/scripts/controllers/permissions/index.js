@@ -74,6 +74,7 @@ export class PermissionsController {
     engine.push(this.permissions.providerMiddlewareFunction.bind(
       this.permissions, { origin }
     ))
+
     return asMiddleware(engine)
   }
 
@@ -112,6 +113,8 @@ export class PermissionsController {
   _requestPermissions (origin, permissions) {
     return new Promise((resolve, reject) => {
 
+      // rpc-cap assigns an id to the request if there is none, as expected by
+      // requestUserApproval below
       const req = { method: 'wallet_requestPermissions', params: [permissions] }
       const res = {}
       this.permissions.providerMiddlewareFunction(
@@ -140,13 +143,14 @@ export class PermissionsController {
     const approval = this.pendingApprovals[id]
 
     if (!approval) {
-      log.warn(`Permissions request with id '${id}' not found`)
+      log.error(`Permissions request with id '${id}' not found`)
       return
     }
 
     try {
 
       // attempt to finalize the request and resolve it
+      // may modify the approved permissions
       await this.finalizePermissionsRequest(approved.permissions, accounts)
       approval.resolve(approved.permissions)
 
@@ -170,7 +174,7 @@ export class PermissionsController {
     const approval = this.pendingApprovals[id]
 
     if (!approval) {
-      log.warn(`Permissions request with id '${id}' not found`)
+      log.error(`Permissions request with id '${id}' not found`)
       return
     }
 
@@ -188,22 +192,29 @@ export class PermissionsController {
    */
   async legacyExposeAccounts (origin, accounts) {
 
+    const existingAccounts = await this.getAccounts(origin)
+
+    if (existingAccounts.length > 0) {
+      throw new Error(
+        'May not call legacyExposeAccounts on origin with exposed accounts.'
+      )
+    }
+
     const permissions = {
       eth_accounts: {},
     }
 
+    // validate and modify permissions as necessary
     await this.finalizePermissionsRequest(permissions, accounts)
 
-    let error
-    try {
-      await new Promise((resolve, reject) => {
-        this.permissions.grantNewPermissions(origin, permissions, {}, (err) => (err ? resolve() : reject(err)))
-      })
-    } catch (err) {
-      error = err
-    }
+    await new Promise((resolve, reject) => {
+      this.permissions.grantNewPermissions(
+        origin, permissions, {}, err => (err ? reject(err) : resolve())
+      )
+      // don't bother sending an accountsChanged notification for legacy dapps
+    })
+    .catch(error => {
 
-    if (error) {
       if (error.code === 4001) {
         throw error
       } else {
@@ -215,7 +226,7 @@ export class PermissionsController {
           },
         })
       }
-    }
+    })
   }
 
   /**
@@ -244,8 +255,8 @@ export class PermissionsController {
   }
 
   /**
-   * Finalizes a permissions request.
-   * Throws if request validation fails.
+   * Finalizes a permissions request. Throws if request validation fails.
+   * Mutates certain caveats. See function body for details.
    *
    * @param {Object} requestedPermissions - The requested permissions.
    * @param {string[]} accounts - The accounts to expose, if any.
@@ -323,6 +334,8 @@ export class PermissionsController {
 
   /**
    * Removes the given permissions for the given domain.
+   * Should only be called after confirming that the permissions exist.
+   *
    * @param {Object} domains { origin: [permissions] }
    */
   removePermissionsFor (domains) {
@@ -356,10 +369,18 @@ export class PermissionsController {
 
     const permittedAccounts = await this.getAccounts(origin)
 
+    // defensive programming
+    if (
+      !origin || typeof origin !== 'string' ||
+      !account || typeof account !== 'string'
+    ) {
+      throw new Error('Should provide non-empty origin and account strings.')
+    }
+
     // do nothing if the account is not permitted for the origin, or
     // if it's already first in the array of permitted accounts
     if (
-      !account || !permittedAccounts.includes(account) ||
+      !permittedAccounts.includes(account) ||
       permittedAccounts[0] === account
     ) {
       return
@@ -371,7 +392,9 @@ export class PermissionsController {
 
     // update permitted accounts to ensure that accounts are returned
     // in the same order every time
-    this.updatePermittedAccounts(origin, newPermittedAccounts)
+    // await because the accounts may not have changed when this function
+    // returns even if the caller awaits
+    await this.updatePermittedAccounts(origin, newPermittedAccounts)
   }
 
   /**
