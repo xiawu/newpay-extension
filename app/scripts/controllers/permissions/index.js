@@ -42,7 +42,7 @@ export class PermissionsController {
     this.getKeyringAccounts = getKeyringAccounts
     this._platform = platform
     this._restrictedMethods = getRestrictedMethods(this)
-    this.permissionsLogController = new PermissionsLogController({
+    this.permissionsLog = new PermissionsLogController({
       restrictedMethods: Object.keys(this._restrictedMethods),
       store: this.store,
     })
@@ -66,7 +66,7 @@ export class PermissionsController {
 
     const engine = new JsonRpcEngine()
 
-    engine.push(this.permissionsLogController.createMiddleware())
+    engine.push(this.permissionsLog.createMiddleware())
 
     engine.push(createMethodMiddleware({
       store: this.store,
@@ -202,6 +202,7 @@ export class PermissionsController {
   }
 
   /**
+   * WARNING: Dangerous method.
    * Grants the given origin the eth_accounts permission for the given account(s).
    * This method should ONLY be called as a result of direct user action in the UI,
    * with the intention of supporting legacy dapps that don't support EIP 1102.
@@ -211,6 +212,7 @@ export class PermissionsController {
    */
   async legacyExposeAccounts (origin, accounts) {
 
+    // accounts are validated by finalizePermissionsRequest
     if (!origin || typeof origin !== 'string') {
       throw new Error('Must provide non-empty string origin.')
     }
@@ -235,6 +237,9 @@ export class PermissionsController {
         )
         // don't bother sending an accountsChanged notification for legacy dapps
       })
+
+      // log that the accounts were exposed
+      this.permissionsLog.logAccountExposure(origin, accounts)
     } catch (error) {
 
       /* istanbul ignore next: too hard to induce */
@@ -344,7 +349,7 @@ export class PermissionsController {
       payload.method === NOTIFICATION_NAMES.accountsChanged &&
       Array.isArray(payload.result)
     ) {
-      this.permissionsLogController.updateAccountsHistory(
+      this.permissionsLog.updateAccountsHistory(
         origin, payload.result
       )
     }

@@ -1,27 +1,23 @@
 import assert from 'assert'
 
 import {
-  PermissionsController,
-} from '../../../../../app/scripts/controllers/permissions'
-
-import {
   METADATA_STORE_KEY,
 } from '../../../../../app/scripts/controllers/permissions/enums'
 
 import {
-  getKeyringAccounts,
+  getPermController,
+  grantPermissions,
   getNotifyDomain,
   getNotifyAllDomains,
   getApprovedPermissionsRequest,
-  platform,
   ACCOUNT_ARRAYS,
   DUMMY_ACCOUNT,
   ERRORS,
   ORIGINS,
+  PERM_NAMES,
   PERMS,
   NOTIFICATIONS,
   REQUEST_IDS,
-  noop,
 } from './mocks'
 
 let permController
@@ -38,17 +34,9 @@ const initNotifications = () => {
 }
 
 const initPermController = () => {
-  permController = new PermissionsController({
-    platform,
-    getKeyringAccounts,
-    notifyDomain: getNotifyDomain(notifications),
-    notifyAllDomains: getNotifyAllDomains(notifications),
-  })
-}
-
-const grantPermissions = (origin, permissions) => {
-  permController.permissions.grantNewPermissions(
-    origin, permissions, {}, noop
+  permController = getPermController(
+    getNotifyDomain(notifications),
+    getNotifyAllDomains(notifications),
   )
 }
 
@@ -64,8 +52,14 @@ describe('permissions controller', () => {
 
     before(async () => {
       initPermController()
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
-      grantPermissions(ORIGINS.b, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
+      grantPermissions(
+        permController, ORIGINS.a,
+        PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a)
+      )
+      grantPermissions(
+        permController, ORIGINS.b,
+        PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b)
+      )
     })
 
     it('gets permitted accounts for permitted origins', async () => {
@@ -83,7 +77,7 @@ describe('permissions controller', () => {
     })
 
     it('does not handle "MetaMask" origin as special case', async () => {
-      const metamaskAccounts = await permController.getAccounts(ORIGINS.metamask)
+      const metamaskAccounts = await permController.getAccounts('MetaMask')
       assert.deepEqual(metamaskAccounts, [], 'origin should have no accounts')
     })
   })
@@ -97,9 +91,9 @@ describe('permissions controller', () => {
 
     it('notifies all appropriate domains and removes permissions', async () => {
 
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
-      grantPermissions(ORIGINS.b, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
-      grantPermissions(ORIGINS.c, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.c))
+      grantPermissions(permController, ORIGINS.a, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
+      grantPermissions(permController, ORIGINS.b, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b))
+      grantPermissions(permController, ORIGINS.c, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.c))
 
       let aAccounts = await permController.getAccounts(ORIGINS.a)
       let bAccounts = await permController.getAccounts(ORIGINS.b)
@@ -147,8 +141,8 @@ describe('permissions controller', () => {
 
     beforeEach(async () => {
       initNotifications()
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
-      grantPermissions(ORIGINS.b, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
+      grantPermissions(permController, ORIGINS.a, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
+      grantPermissions(permController, ORIGINS.b, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b))
     })
 
     it('removes permissions for multiple domains', async () => {
@@ -160,8 +154,8 @@ describe('permissions controller', () => {
       assert.deepEqual(bAccounts, ACCOUNT_ARRAYS.b, 'second origin does not have correct accounts')
 
       permController.removePermissionsFor({
-        [ORIGINS.a]: [PERMS.names.eth_accounts],
-        [ORIGINS.b]: [PERMS.names.eth_accounts],
+        [ORIGINS.a]: [PERM_NAMES.eth_accounts],
+        [ORIGINS.b]: [PERM_NAMES.eth_accounts],
       })
 
       aAccounts = await permController.getAccounts(ORIGINS.a)
@@ -179,7 +173,7 @@ describe('permissions controller', () => {
     it('removes permissions for a single domain, without affecting another', async () => {
 
       permController.removePermissionsFor({
-        [ORIGINS.b]: [PERMS.names.eth_accounts],
+        [ORIGINS.b]: [PERM_NAMES.eth_accounts],
       })
 
       const aAccounts = await permController.getAccounts(ORIGINS.a)
@@ -200,7 +194,7 @@ describe('permissions controller', () => {
     it('does nothing for unknown domains', async () => {
 
       permController.removePermissionsFor({
-        [ORIGINS.c]: [PERMS.names.eth_accounts],
+        [ORIGINS.c]: [PERM_NAMES.eth_accounts],
       })
 
       const aAccounts = await permController.getAccounts(ORIGINS.a)
@@ -224,8 +218,8 @@ describe('permissions controller', () => {
     })
 
     beforeEach(async () => {
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
-      grantPermissions(ORIGINS.b, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
+      grantPermissions(permController, ORIGINS.a, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
+      grantPermissions(permController, ORIGINS.b, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b))
     })
 
     it('throws error on non-array accounts', async () => {
@@ -306,8 +300,8 @@ describe('permissions controller', () => {
 
     beforeEach(async () => {
       initNotifications()
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
-      grantPermissions(ORIGINS.b, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
+      grantPermissions(permController, ORIGINS.a, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
+      grantPermissions(permController, ORIGINS.b, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b))
     })
 
     it('throws on invalid accounts', async () => {
@@ -384,7 +378,7 @@ describe('permissions controller', () => {
 
       assert.rejects(
         permController.finalizePermissionsRequest(
-          PERMS.request.eth_accounts(), [DUMMY_ACCOUNT]
+          PERMS.requests.eth_accounts(), [DUMMY_ACCOUNT]
         ),
         ERRORS.validatePermittedAccounts.nonKeyringAccount(DUMMY_ACCOUNT),
         'should throw on non-keyring account'
@@ -394,21 +388,21 @@ describe('permissions controller', () => {
     it('adds caveat to eth_accounts permission', async () => {
 
       const perm = await permController.finalizePermissionsRequest(
-        PERMS.request.eth_accounts(),
+        PERMS.requests.eth_accounts(),
         ACCOUNT_ARRAYS.a,
       )
 
-      assert.deepEqual(perm, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
+      assert.deepEqual(perm, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
     })
 
     it('replaces caveat of eth_accounts permission', async () => {
 
       const perm = await permController.finalizePermissionsRequest(
-        PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a),
+        PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a),
         ACCOUNT_ARRAYS.b,
       )
 
-      assert.deepEqual(perm, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
+      assert.deepEqual(perm, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b))
     })
   })
 
@@ -421,7 +415,7 @@ describe('permissions controller', () => {
       initPermController()
     })
 
-    it('successfully exposes accounts', async () => {
+    it('successfully exposes accounts and updates permissions history', async () => {
 
       let aAccounts = await permController.getAccounts(ORIGINS.a)
       assert.deepEqual(aAccounts, [], 'origin should have no accounts')
@@ -430,11 +424,29 @@ describe('permissions controller', () => {
 
       aAccounts = await permController.getAccounts(ORIGINS.a)
       assert.deepEqual(aAccounts, ACCOUNT_ARRAYS.a, 'origin should have correct accounts')
+
+      // now, permissions history should be updated
+      const permissionsHistory = permController.permissionsLog.getHistory()
+      const historyOrigins = Object.keys(permissionsHistory)
+
+      assert.equal(historyOrigins.length, 1, 'should have single origin')
+      assert.equal(historyOrigins[0], ORIGINS.a)
+
+      assert.ok(
+        permissionsHistory[ORIGINS.a].eth_accounts,
+        'history should have eth_accounts entry'
+      )
+
+      assert.deepEqual(
+        Object.keys(permissionsHistory[ORIGINS.a].eth_accounts.accounts),
+        ACCOUNT_ARRAYS.a,
+        'eth_accounts entry accounts should be as expected'
+      )
     })
 
     it('throws if called on origin with existing exposed accounts', async () => {
 
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
+      grantPermissions(permController, ORIGINS.a, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
 
       const aAccounts = await permController.getAccounts(ORIGINS.a)
       assert.deepEqual(aAccounts, ACCOUNT_ARRAYS.a, 'origin should have correct accounts')
@@ -443,6 +455,12 @@ describe('permissions controller', () => {
         permController.legacyExposeAccounts(ORIGINS.a, ACCOUNT_ARRAYS.b),
         ERRORS.legacyExposeAccounts.forbiddenUsage(),
         'should throw if called on origin with existing exposed accounts'
+      )
+
+      const permissionsHistory = permController.permissionsLog.getHistory()
+      assert.deepEqual(
+        permissionsHistory, {},
+        'should not have modified history'
       )
     })
 
@@ -453,6 +471,12 @@ describe('permissions controller', () => {
         ERRORS.validatePermittedAccounts.invalidParam(),
         'should throw if called with no accounts'
       )
+
+      const permissionsHistory = permController.permissionsLog.getHistory()
+      assert.deepEqual(
+        permissionsHistory, {},
+        'should not have modified history'
+      )
     })
 
     it('throws if called with bad origin', async () => {
@@ -461,6 +485,12 @@ describe('permissions controller', () => {
         permController.legacyExposeAccounts(null, ACCOUNT_ARRAYS.a),
         ERRORS.legacyExposeAccounts.badOrigin(),
         'should throw if called with invalid origin'
+      )
+
+      const permissionsHistory = permController.permissionsLog.getHistory()
+      assert.deepEqual(
+        permissionsHistory, {},
+        'should not have modified history'
       )
     })
   })
@@ -473,8 +503,8 @@ describe('permissions controller', () => {
 
     beforeEach(async () => {
       initNotifications()
-      grantPermissions(ORIGINS.a, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a))
-      grantPermissions(ORIGINS.b, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b))
+      grantPermissions(permController, ORIGINS.a, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a))
+      grantPermissions(permController, ORIGINS.b, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b))
     })
 
     it('throws if invalid origin or account', async () => {
@@ -524,7 +554,7 @@ describe('permissions controller', () => {
 
       assert.deepEqual(
         notifications[ORIGINS.a],
-        [NOTIFICATIONS.newAccounts(ACCOUNT_ARRAYS.a.reverse())],
+        [NOTIFICATIONS.newAccounts([ ...ACCOUNT_ARRAYS.a ].reverse())],
         'should have emitted notification'
       )
     })
@@ -566,7 +596,7 @@ describe('permissions controller', () => {
 
       // bad accounts param
 
-      request = getApprovedPermissionsRequest(REQUEST_IDS.a, PERMS.request.eth_accounts())
+      request = getApprovedPermissionsRequest(REQUEST_IDS.a, PERMS.requests.eth_accounts())
 
       assert.rejects(
         mockRequestUserApproval(REQUEST_IDS.a),
@@ -602,7 +632,7 @@ describe('permissions controller', () => {
 
     it('approves valid request', async () => {
 
-      const request = getApprovedPermissionsRequest(REQUEST_IDS.a, PERMS.request.eth_accounts())
+      const request = getApprovedPermissionsRequest(REQUEST_IDS.a, PERMS.requests.eth_accounts())
 
       let perms
 
@@ -616,7 +646,7 @@ describe('permissions controller', () => {
       await permController.approvePermissionsRequest(request, ACCOUNT_ARRAYS.a)
 
       assert.deepEqual(
-        perms, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a),
+        perms, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a),
         'produced expected approved permissions'
       )
 
@@ -628,9 +658,9 @@ describe('permissions controller', () => {
 
     it('approves valid requests regardless of order', async () => {
 
-      const request1 = getApprovedPermissionsRequest(REQUEST_IDS.a, PERMS.request.eth_accounts())
-      const request2 = getApprovedPermissionsRequest(REQUEST_IDS.b, PERMS.request.eth_accounts())
-      const request3 = getApprovedPermissionsRequest(REQUEST_IDS.c, PERMS.request.eth_accounts())
+      const request1 = getApprovedPermissionsRequest(REQUEST_IDS.a, PERMS.requests.eth_accounts())
+      const request2 = getApprovedPermissionsRequest(REQUEST_IDS.b, PERMS.requests.eth_accounts())
+      const request3 = getApprovedPermissionsRequest(REQUEST_IDS.c, PERMS.requests.eth_accounts())
 
       let perms1, perms2
 
@@ -655,12 +685,12 @@ describe('permissions controller', () => {
       await permController.approvePermissionsRequest(request1, ACCOUNT_ARRAYS.a)
 
       assert.deepEqual(
-        perms1, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.a),
+        perms1, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.a),
         'first request produced expected approved permissions'
       )
 
       assert.deepEqual(
-        perms2, PERMS.complete.eth_accounts(ACCOUNT_ARRAYS.b),
+        perms2, PERMS.finalizedRequests.eth_accounts(ACCOUNT_ARRAYS.b),
         'second request produced expected approved permissions'
       )
 
@@ -747,7 +777,7 @@ describe('permissions controller', () => {
     it('requests the given permissions and grants them on user approval', async () => {
 
       permController._requestPermissions(
-        ORIGINS.a, PERMS.request.eth_accounts()
+        ORIGINS.a, PERMS.requests.eth_accounts()
       )
         .then(async (result) => {
 
@@ -777,7 +807,7 @@ describe('permissions controller', () => {
       )
 
       const id = Object.keys(permController.pendingApprovals)[0]
-      const request = getApprovedPermissionsRequest(id, PERMS.request.eth_accounts())
+      const request = getApprovedPermissionsRequest(id, PERMS.requests.eth_accounts())
 
       permController.approvePermissionsRequest(request, ACCOUNT_ARRAYS.a)
     })
@@ -785,7 +815,7 @@ describe('permissions controller', () => {
     it('requests the given permissions and rejects them on user rejection', async () => {
 
       permController._requestPermissions(
-        ORIGINS.a, PERMS.request.eth_accounts()
+        ORIGINS.a, PERMS.requests.eth_accounts()
       )
         .then(() => {
           assert.fail('promise should not resolve')
