@@ -140,6 +140,9 @@ export const PERMS = {
     test_method: () => {
       return { test_method: {} }
     },
+    does_not_exist: () => {
+      return { does_not_exist: {} }
+    },
   },
 
   finalizedRequests: {
@@ -190,6 +193,13 @@ export const NOTIFICATIONS = {
     return {
       method: NOTIFICATION_NAMES.accountsChanged,
       result: accounts,
+    }
+  },
+
+  test: () => {
+    return {
+      method: 'test_notification',
+      result: true,
     }
   },
 }
@@ -282,6 +292,14 @@ export const ERRORS = {
     unauthorized: () => {
       return {
         code: 4100,
+      }
+    },
+  },
+
+  logAccountExposure: {
+    invalidParams: () => {
+      return {
+        message: 'Must provide non-empty string origin and array of accounts.',
       }
     },
   },

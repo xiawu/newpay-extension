@@ -19,6 +19,7 @@ import {
   restrictedMethods,
   rpcRequests,
   ACCOUNT_ARRAYS,
+  ERRORS,
   EXPECTED_HISTORIES,
   ORIGINS,
   PERM_NAMES,
@@ -443,6 +444,52 @@ describe('permissions log', () => {
       )
     })
 
+    it('handles extra caveats for eth_accounts', async () => {
+
+      const req = rpcRequests.requestPermission(
+        ORIGINS.a, PERM_NAMES.eth_accounts
+      )
+      const res = {
+        result: [ PERMS.granted.eth_accounts(ACCOUNT_ARRAYS.a) ],
+      }
+      res.result[0].caveats.push({ foo: 'bar' })
+
+      logMiddleware({ ...req }, { ...res })
+
+      // validate history
+
+      assert.deepEqual(
+        permLog.getHistory(),
+        EXPECTED_HISTORIES.case1[0],
+        'should have correct history'
+      )
+    })
+
+    // wallet_requestPermissions returns all permissions approved for the
+    // requesting origin, including old ones
+    it('handles unrequested permissions on the response', async () => {
+
+      const req = rpcRequests.requestPermission(
+        ORIGINS.a, PERM_NAMES.eth_accounts
+      )
+      const res = {
+        result: [
+          PERMS.granted.eth_accounts(ACCOUNT_ARRAYS.a),
+          PERMS.granted.test_method(),
+        ],
+      }
+
+      logMiddleware({ ...req }, { ...res })
+
+      // validate history
+
+      assert.deepEqual(
+        permLog.getHistory(),
+        EXPECTED_HISTORIES.case1[0],
+        'should have correct history'
+      )
+    })
+
     it('records and updates history for multiple origins, regardless of response order', async () => {
 
       let permHistory
@@ -545,6 +592,44 @@ describe('permissions log', () => {
       assert.deepEqual(
         permHistory, EXPECTED_HISTORIES.case3[1],
         'should have expected history'
+      )
+    })
+  })
+
+  describe('instance method edge cases', () => {
+
+    beforeEach(() => {
+      initPermLog()
+    })
+
+    it('logAccountExposure errors on invalid params', () => {
+
+      assert.throws(
+        () => {
+          permLog.logAccountExposure('', ACCOUNT_ARRAYS.a)
+        },
+        ERRORS.logAccountExposure.invalidParams()
+      )
+
+      assert.throws(
+        () => {
+          permLog.logAccountExposure(null, ACCOUNT_ARRAYS.a)
+        },
+        ERRORS.logAccountExposure.invalidParams()
+      )
+
+      assert.throws(
+        () => {
+          permLog.logAccountExposure('foo', {})
+        },
+        ERRORS.logAccountExposure.invalidParams()
+      )
+
+      assert.throws(
+        () => {
+          permLog.logAccountExposure('foo', [])
+        },
+        ERRORS.logAccountExposure.invalidParams()
       )
     })
   })

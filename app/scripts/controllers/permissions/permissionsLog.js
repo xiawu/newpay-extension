@@ -122,19 +122,16 @@ export default class PermissionsLogController {
       // call next with a return handler for capturing the response
       next((cb) => {
 
-        if (activityEntry) {
+        const time = Date.now()
+        this.logResponse(activityEntry, res, time)
 
-          const time = Date.now()
-          this.logResponse(activityEntry, res, time)
-
-          if (requestedMethods && !res.error) {
-            // any permissions or accounts changes will be recorded on the response,
-            // so we only log permissions history here
-            this.logPermissionsHistory(
-              requestedMethods, origin, res.result, time,
-              method === 'eth_requestAccounts',
-            )
-          }
+        if (requestedMethods && !res.error && res.result) {
+          // any permissions or accounts changes will be recorded on the response,
+          // so we only log permissions history here
+          this.logPermissionsHistory(
+            requestedMethods, origin, res.result, time,
+            method === 'eth_requestAccounts',
+          )
         }
         cb()
       })
@@ -213,6 +210,16 @@ export default class PermissionsLogController {
    * @param {Array<string>} accounts - The accounts that were exposed.
    */
   logAccountExposure (origin, accounts) {
+
+    if (
+      !origin || typeof origin !== 'string' ||
+      !Array.isArray(accounts) || accounts.length === 0
+    ) {
+      throw new Error(
+        'Must provide non-empty string origin and array of accounts.'
+      )
+    }
+
     this.logPermissionsHistory(
       ['eth_accounts'],
       origin,
@@ -255,37 +262,38 @@ export default class PermissionsLogController {
       // Special handling for eth_accounts, in order to record the time the
       // accounts were last seen or approved by the origin.
       newEntries = result
-        ? result
-          .map((perm) => {
+        .map(perm => {
 
-            if (perm.parentCapability === 'eth_accounts') {
-              accounts = this.getAccountsFromPermission(perm)
-            }
+          if (perm.parentCapability === 'eth_accounts') {
+            accounts = this.getAccountsFromPermission(perm)
+          }
 
-            return perm.parentCapability
-          })
-          .reduce((acc, method) => {
+          return perm.parentCapability
+        })
+        .reduce((acc, method) => {
 
-            if (requestedMethods.includes(method)) {
+          // all approved permissions will be included in the response,
+          // not just the newly requested ones
+          if (requestedMethods.includes(method)) {
 
-              if (method === 'eth_accounts') {
+            if (method === 'eth_accounts') {
 
-                const accountToTimeMap = getAccountToTimeMap(accounts, time)
+              const accountToTimeMap = getAccountToTimeMap(accounts, time)
 
-                acc[method] = {
-                  lastApproved: time,
-                  accounts: accountToTimeMap,
-                }
-              } else {
-                acc[method] = { lastApproved: time }
+              acc[method] = {
+                lastApproved: time,
+                accounts: accountToTimeMap,
               }
+            } else {
+              acc[method] = { lastApproved: time }
             }
+          }
 
-            return acc
-          }, {})
-        : {} // no result (e.g. in case of error), no log
+          return acc
+        }, {})
     }
 
+    /* istanbul ignore else */
     if (Object.keys(newEntries).length > 0) {
       this.commitNewHistory(origin, newEntries)
     }

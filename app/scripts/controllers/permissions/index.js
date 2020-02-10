@@ -24,6 +24,7 @@ import {
 export class PermissionsController {
 
   constructor (
+    /* istanbul ignore next */
     {
       platform, notifyDomain, notifyAllDomains,
       getKeyringAccounts, getRestrictedMethods = _getRestrictedMethods,
@@ -127,9 +128,10 @@ export class PermissionsController {
         { origin }, req, res, () => {}, _end
       )
 
-      function _end (err) {
-        if (err || res.error) {
-          reject(err || res.error)
+      function _end (_err) {
+        const err = _err || res.error
+        if (err) {
+          reject(err)
         } else {
           resolve(res.result)
         }
@@ -233,9 +235,19 @@ export class PermissionsController {
 
       await new Promise((resolve, reject) => {
         this.permissions.grantNewPermissions(
-          origin, permissions, {}, err => (err ? reject(err) : resolve())
+          origin, permissions, {}, _end
         )
+
         // don't bother sending an accountsChanged notification for legacy dapps
+
+        function _end (err) {
+          /* istanbul ignore if */
+          if (err) {
+            reject(err)
+          } else {
+            resolve()
+          }
+        }
       })
 
       // log that the accounts were exposed
@@ -484,6 +496,5 @@ export class PermissionsController {
 }
 
 export function addInternalMethodPrefix (method) {
-  /* istanbul ignore next */
   return WALLET_PREFIX + method
 }
