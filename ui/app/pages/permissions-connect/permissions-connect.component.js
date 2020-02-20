@@ -54,7 +54,7 @@ export default class PermissionConnect extends Component {
 
   state = {
     redirecting: false,
-    selectedAccountAddress: '',
+    selectedAccountAddresses: {},
     permissionAccepted: null,
     originName: this.props.originName,
   }
@@ -92,9 +92,9 @@ export default class PermissionConnect extends Component {
     }
   }
 
-  selectAccount = (address) => {
+  selectAccounts = (addresses) => {
     this.setState({
-      selectedAccountAddress: address,
+      selectedAccountAddresses: addresses,
     })
     this.props.history.push(this.props.confirmPermissionPath)
   }
@@ -161,7 +161,7 @@ export default class PermissionConnect extends Component {
       confirmPermissionPath,
       page,
     } = this.props
-    const { selectedAccountAddress, permissionAccepted, originName, redirecting } = this.state
+    const { selectedAccountAddresses, permissionAccepted, originName, redirecting } = this.state
 
     return (
       <div className="permissions-connect">
@@ -178,10 +178,10 @@ export default class PermissionConnect extends Component {
                 accounts={accounts}
                 originName={originName}
                 nativeCurrency={nativeCurrency}
-                selectAccount={(address) => this.selectAccount(address)}
-                selectNewAccountViaModal={() => {
+                selectAccounts={(addresses) => this.selectAccounts(addresses)}
+                selectNewAccountViaModal={(handleAccountClick) => {
                   showNewAccountModal({
-                    onCreateNewAccount: this.selectAccount,
+                    onCreateNewAccount: (address) => handleAccountClick(address),
                     newAccountNumber,
                   })
                 }}
@@ -193,6 +193,7 @@ export default class PermissionConnect extends Component {
                   }
                 }}
                 permissionsRequestId={permissionsRequestId}
+                selectedAccountAddresses={selectedAccountAddresses}
               />
             )}
           />
@@ -210,7 +211,7 @@ export default class PermissionConnect extends Component {
                     rejectPermissionsRequest(requestId)
                     this.redirectFlow(false)
                   }}
-                  selectedIdentity={accounts.find((account) => account.address === selectedAccountAddress)}
+                  selectedIdentities={accounts.filter((account) => selectedAccountAddresses[account.address])}
                   redirect={redirecting}
                   permissionRejected={ permissionAccepted === false }
                 />
