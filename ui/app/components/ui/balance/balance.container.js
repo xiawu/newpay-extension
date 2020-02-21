@@ -8,6 +8,7 @@ import {
   getMetaMaskAccounts,
   getIsMainnet,
   preferencesSelector,
+  getSelectedAddress,
 } from '../../../selectors/selectors'
 
 const mapStateToProps = (state) => {
@@ -15,7 +16,7 @@ const mapStateToProps = (state) => {
   const isMainnet = getIsMainnet(state)
   const accounts = getMetaMaskAccounts(state)
   const network = state.metamask.network
-  const selectedAddress = state.metamask.selectedAddress || Object.keys(accounts)[0]
+  const selectedAddress = getSelectedAddress(state) || accounts[0]
   const account = accounts[selectedAddress]
 
   return {

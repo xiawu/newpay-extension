@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import * as actions from '../../../store/actions'
+import {
+  displayWarning,
+  importNewAccount,
+  showAccountDetail,
+} from '../../../store/actions'
 import FileInput from 'react-simple-file-input'
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes'
 import { getMetaMaskAccounts } from '../../../selectors/selectors'
@@ -89,7 +93,10 @@ class JsonImportSubview extends Component {
   }
 
   createNewKeychain () {
-    const { firstAddress, displayWarning, importNewJsonAccount, setSelectedAddress, history } = this.props
+    const {
+      firstAddress, displayWarning, importNewJsonAccount,
+      setSelectedAddress, history
+    } = this.props
     const { fileContents } = this.state
 
     if (!fileContents) {
@@ -154,9 +161,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    displayWarning: (warning) => dispatch(actions.displayWarning(warning)),
-    importNewJsonAccount: (options) => dispatch(actions.importNewAccount('JSON File', options)),
-    setSelectedAddress: (address) => dispatch(actions.setSelectedAddress(address)),
+    displayWarning: (warning) => dispatch(displayWarning(warning)),
+    importNewJsonAccount: (options) => dispatch(importNewAccount('JSON File', options)),
+    setSelectedAddress: (address) => dispatch(showAccountDetail(address)),
   }
 }
 

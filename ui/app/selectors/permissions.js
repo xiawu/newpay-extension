@@ -26,7 +26,7 @@ const accountsPermissionSelector = createSelector(
 /**
  * Selects the permitted accounts from an eth_accounts permission.
  * Expects input from accountsPermissionsSelector.
- * @returns - An empty array or an array of accounts.
+ * @returns {Array<string>} An empty array or an array of accounts.
  */
 export const getPermittedAccounts = createSelector(
   accountsPermissionSelector, // deep equal check performed on this output

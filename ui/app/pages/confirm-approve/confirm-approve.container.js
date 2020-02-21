@@ -7,6 +7,7 @@ import {
 } from '../../selectors/confirm-transaction'
 import { showModal } from '../../store/actions'
 import { tokenSelector } from '../../selectors/tokens'
+import { getSelectedAddress } from '../../selectors/selectors'
 import {
   getTokenData,
 } from '../../helpers/utils/transactions.util'
@@ -23,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
   const { id: paramsTransactionId } = params
   const {
     confirmTransaction,
-    metamask: { currentCurrency, conversionRate, selectedAddressTxList, domainMetadata = {}, selectedAddress },
+    metamask: { currentCurrency, conversionRate, selectedAddressTxList, domainMetadata = {} },
   } = state
 
   const {
@@ -64,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
     tokenSymbol,
     siteImage,
     token: { address: tokenAddress },
-    userAddress: selectedAddress,
+    userAddress: getSelectedAddress(state),
     origin: formattedOrigin,
     data,
     decimals: Number(decimals),

@@ -10,7 +10,7 @@ import {
   getNetworkIdentifier,
   preferencesSelector,
   hasPermissionRequests,
-  getAddressConnectedToCurrentTab,
+  getSelectedAddress,
 } from '../../selectors/selectors'
 import classnames from 'classnames'
 
@@ -110,16 +110,14 @@ class Routes extends Component {
   }
 
   componentDidMount () {
-    const { addressConnectedToCurrentTab, showAccountDetail, selectedAddress } = this.props
-    if (addressConnectedToCurrentTab && addressConnectedToCurrentTab !== selectedAddress) {
-      showAccountDetail(addressConnectedToCurrentTab)
-    }
+    const { selectedAddress, showAccountDetail } = this.props
+    selectedAddress && showAccountDetail(selectedAddress)
   }
 
   componentDidUpdate (prevProps) {
-    const { addressConnectedToCurrentTab, showAccountDetail } = this.props
-    if (addressConnectedToCurrentTab && addressConnectedToCurrentTab !== prevProps.addressConnectedToCurrentTab) {
-      showAccountDetail(addressConnectedToCurrentTab)
+    const { selectedAddress, showAccountDetail } = this.props
+    if (selectedAddress !== prevProps.selectedAddress) {
+      showAccountDetail(selectedAddress)
     }
   }
 
@@ -379,7 +377,6 @@ Routes.propTypes = {
   providerId: PropTypes.string,
   hasPermissionsRequests: PropTypes.bool,
   autoLockTimeLimit: PropTypes.number,
-  addressConnectedToCurrentTab: PropTypes.string,
   showAccountDetail: PropTypes.func,
 }
 
@@ -411,14 +408,13 @@ function mapStateToProps (state) {
     submittedPendingTransactions: submittedPendingTransactionsSelector(state),
     network: state.metamask.network,
     provider: state.metamask.provider,
-    selectedAddress: state.metamask.selectedAddress,
+    selectedAddress: getSelectedAddress(state),
     frequentRpcListDetail: state.metamask.frequentRpcListDetail || [],
     currentCurrency: state.metamask.currentCurrency,
     isMouseUser: state.appState.isMouseUser,
     providerId: getNetworkIdentifier(state),
     autoLockTimeLimit,
     hasPermissionsRequests: hasPermissionRequests(state),
-    addressConnectedToCurrentTab: getAddressConnectedToCurrentTab(state),
   }
 }
 

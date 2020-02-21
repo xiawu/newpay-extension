@@ -13,6 +13,7 @@ import { ENVIRONMENT_TYPE_NOTIFICATION } from '../../../app/scripts/lib/enums'
 import { hasUnconfirmedTransactions } from '../helpers/utils/confirm-tx.util'
 import { setCustomGasLimit } from '../ducks/gas/gas.duck'
 import txHelper from '../../lib/tx-helper'
+import { getOriginOfCurrentTab } from '../selectors/selectors'
 
 export const actionConstants = {
   GO_HOME: 'GO_HOME',
@@ -359,12 +360,12 @@ export function fetchInfoToSync () {
   }
 }
 
-export function resetAccount () {
+export function resetAccount (address) {
   return (dispatch) => {
     dispatch(showLoadingIndication())
 
     return new Promise((resolve, reject) => {
-      background.resetAccount((err, account) => {
+      background.resetAccount(address, (err, account) => {
         dispatch(hideLoadingIndication())
         if (err) {
           dispatch(displayWarning(err.message))
@@ -420,7 +421,7 @@ export function addNewKeyring (type, opts) {
 }
 
 export function importNewAccount (strategy, args) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     let newState
     dispatch(showLoadingIndication('This may take a while, please be patient.'))
     try {
@@ -436,10 +437,7 @@ export function importNewAccount (strategy, args) {
     dispatch(hideLoadingIndication())
     dispatch(updateMetamaskState(newState))
     if (newState.selectedAddress) {
-      dispatch({
-        type: actionConstants.SHOW_ACCOUNT_DETAIL,
-        value: newState.selectedAddress,
-      })
+      _showAccountDetail(newState.selectedAddress, dispatch, getState)
     }
     return newState
   }
@@ -1326,37 +1324,29 @@ export function setSelectedToken (tokenAddress) {
   }
 }
 
-export function setSelectedAddress (address) {
-  return (dispatch) => {
-    dispatch(showLoadingIndication())
-    log.debug(`background.setSelectedAddress`)
-    background.setSelectedAddress(address, (err) => {
-      dispatch(hideLoadingIndication())
-      if (err) {
-        return dispatch(displayWarning(err.message))
-      }
-    })
+export function showAccountDetail (address) {
+  return (dispatch, getState) => {
+    _showAccountDetail(address, dispatch, getState)
   }
 }
 
-export function showAccountDetail (address) {
-  return (dispatch) => {
-    dispatch(showLoadingIndication())
-    log.debug(`background.setSelectedAddress`)
-    background.setSelectedAddress(address, (err, tokens) => {
-      dispatch(hideLoadingIndication())
-      if (err) {
-        return dispatch(displayWarning(err.message))
-      }
-      background.handleNewAccountSelected(origin, address)
-      dispatch(updateTokens(tokens))
-      dispatch({
-        type: actionConstants.SHOW_ACCOUNT_DETAIL,
-        value: address,
-      })
-      dispatch(setSelectedToken())
+function _showAccountDetail (address, dispatch, getState) {
+  dispatch(showLoadingIndication())
+  const origin = getOriginOfCurrentTab(getState())
+  log.debug(`background.setSelectedAddress`)
+  background.setSelectedAddress({ address, origin }, (err, tokens) => {
+    dispatch(hideLoadingIndication())
+    if (err) {
+      return dispatch(displayWarning(err.message))
+    }
+    background.handleNewAccountSelected(origin, address)
+    dispatch(updateTokens(tokens))
+    dispatch({
+      type: actionConstants.SHOW_ACCOUNT_DETAIL,
+      value: address,
     })
-  }
+    dispatch(setSelectedToken())
+  })
 }
 
 export function showAccountsPage () {
@@ -2317,7 +2307,7 @@ export function legacyExposeAccounts (origin, accounts) {
 }
 
 /**
- * Clears the given permissions for the given origin.
+ * Removes all permissions and the last selected address for the given origin.
  */
 export function removePermissionsFor (domains) {
   return () => {
@@ -2578,9 +2568,8 @@ export function setNextNonce (nextNonce) {
   }
 }
 
-export function getNextNonce () {
-  return (dispatch, getState) => {
-    const address = getState().metamask.selectedAddress
+export function getNextNonce (address) {
+  return (dispatch) => {
     return new Promise((resolve, reject) => {
       background.getNextNonce(address, (err, nextNonce) => {
         if (err) {

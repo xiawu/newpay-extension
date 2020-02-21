@@ -226,6 +226,7 @@ export default class ConfirmTransactionBase extends Component {
       hideFiatConversion,
       nextNonce,
       getNextNonce,
+      fromAddress,
     } = this.props
 
     if (hideDetails) {
@@ -287,7 +288,7 @@ export default class ConfirmTransactionBase extends Component {
                       } else {
                         updateCustomNonce(String(Math.floor(value)))
                       }
-                      getNextNonce()
+                      getNextNonce(fromAddress)
                     }}
                     fullWidth
                     margin="dense"
@@ -590,7 +591,10 @@ export default class ConfirmTransactionBase extends Component {
   }
 
   componentDidMount () {
-    const { toAddress, txData: { origin } = {}, getNextNonce, tryReverseResolveAddress } = this.props
+    const {
+      toAddress, txData: { origin } = {}, fromAddress,
+      getNextNonce, tryReverseResolveAddress
+    } = this.props
     const { metricsEvent } = this.context
     metricsEvent({
       eventOpts: {
@@ -607,7 +611,7 @@ export default class ConfirmTransactionBase extends Component {
       window.addEventListener('beforeunload', this._beforeUnload)
     }
 
-    getNextNonce()
+    getNextNonce(fromAddress)
     tryReverseResolveAddress(toAddress)
   }
 

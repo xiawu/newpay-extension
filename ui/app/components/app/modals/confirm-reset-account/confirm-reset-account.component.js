@@ -6,6 +6,7 @@ export default class ConfirmResetAccount extends PureComponent {
   static propTypes = {
     hideModal: PropTypes.func.isRequired,
     resetAccount: PropTypes.func.isRequired,
+    selectedAddress: PropTypes.string.isRequired,
   }
 
   static contextTypes = {
@@ -13,8 +14,9 @@ export default class ConfirmResetAccount extends PureComponent {
   }
 
   handleReset = () => {
-    this.props.resetAccount()
-      .then(() => this.props.hideModal())
+    const { hideModal, resetAccount, selectedAddress } = this.props
+    resetAccount(selectedAddress)
+      .then(() => hideModal())
   }
 
   render () {

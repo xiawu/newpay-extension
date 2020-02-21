@@ -12,7 +12,7 @@ import {
 import { hexToDecimal } from '../helpers/utils/conversions.util'
 import { selectedTokenAddressSelector } from './tokens'
 import { getFastPriceEstimateInHexWEI } from './custom-gas'
-import { getSelectedToken } from './selectors'
+import { getSelectedToken, getSelectedAddress } from './selectors'
 import txHelper from '../../lib/tx-helper'
 
 export const shapeShiftTxListSelector = (state) => state.metamask.shapeShiftTxList
@@ -24,7 +24,7 @@ export const incomingTxListSelector = (state) => {
   }
 
   const network = state.metamask.network
-  const selectedAddress = state.metamask.selectedAddress
+  const selectedAddress = getSelectedAddress(state)
   return Object.values(state.metamask.incomingTransactions)
     .filter(({ metamaskNetworkId, txParams }) => (
       txParams.to === selectedAddress && metamaskNetworkId === network

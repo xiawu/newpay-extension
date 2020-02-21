@@ -1,11 +1,10 @@
 import { connect } from 'react-redux'
 import UniqueImage from './unique-image.component'
+import { getSelectedAddress } from '../../../../selectors/selectors'
 
 const mapStateToProps = ({ metamask }) => {
-  const { selectedAddress } = metamask
-
   return {
-    address: selectedAddress,
+    address: getSelectedAddress(state),
   }
 }
 

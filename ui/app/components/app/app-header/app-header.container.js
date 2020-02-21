@@ -3,7 +3,14 @@ import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
 import AppHeader from './app-header.component'
-import * as actions from '../../../store/actions'
+import {
+  showNetworkDropdown,
+  hideNetworkDropdown,
+  toggleAccountMenu,
+} from '../../../store/actions'
+import {
+  getSelectedAddress,
+} from '../../../selectors/selectors'
 
 const mapStateToProps = (state) => {
   const { appState, metamask } = state
@@ -11,7 +18,6 @@ const mapStateToProps = (state) => {
   const {
     network,
     provider,
-    selectedAddress,
     isUnlocked,
     isAccountMenuOpen,
   } = metamask
@@ -20,7 +26,7 @@ const mapStateToProps = (state) => {
     networkDropdownOpen,
     network,
     provider,
-    selectedAddress,
+    selectedAddress: getSelectedAddress(state),
     isUnlocked,
     isAccountMenuOpen,
   }
@@ -28,9 +34,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showNetworkDropdown: () => dispatch(actions.showNetworkDropdown()),
-    hideNetworkDropdown: () => dispatch(actions.hideNetworkDropdown()),
-    toggleAccountMenu: () => dispatch(actions.toggleAccountMenu()),
+    showNetworkDropdown: () => dispatch(showNetworkDropdown()),
+    hideNetworkDropdown: () => dispatch(hideNetworkDropdown()),
+    toggleAccountMenu: () => dispatch(toggleAccountMenu()),
   }
 }
 

@@ -100,7 +100,10 @@ describe('preferences controller', function () {
         '0x7e57e2',
       ])
 
-      preferencesController.setSelectedAddress('0x7e57e2')
+      preferencesController.setSelectedAddress({
+        address: '0x7e57e2',
+        force: true,
+      })
       preferencesController.removeAddress('0x7e57e2')
 
       assert.equal(preferencesController.getSelectedAddress(), '0xda22le')

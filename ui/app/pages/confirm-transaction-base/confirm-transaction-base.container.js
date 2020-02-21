@@ -199,7 +199,7 @@ export const mapDispatchToProps = (dispatch) => {
     cancelAllTransactions: (txList) => dispatch(cancelTxs(txList)),
     sendTransaction: (txData) => dispatch(updateAndApproveTx(customNonceMerge(txData))),
     setMetaMetricsSendCount: (val) => dispatch(setMetaMetricsSendCount(val)),
-    getNextNonce: () => dispatch(getNextNonce()),
+    getNextNonce: (address) => dispatch(getNextNonce(address)),
   }
 }
 

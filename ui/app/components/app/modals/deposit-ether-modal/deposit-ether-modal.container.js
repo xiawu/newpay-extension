@@ -1,11 +1,12 @@
 import { connect } from 'react-redux'
 import { buyEth, hideModal, showModal, hideWarning } from '../../../../store/actions'
+import { getSelectedAddress } from '../../../../selectors/selectors'
 import DepositEtherModal from './deposit-ether-modal.component'
 
 function mapStateToProps (state) {
   return {
     network: state.metamask.network,
-    address: state.metamask.selectedAddress,
+    address: getSelectedAddress(state),
   }
 }
 

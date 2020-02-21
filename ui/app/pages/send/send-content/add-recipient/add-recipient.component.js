@@ -157,7 +157,7 @@ export default class AddRecipient extends Component {
         <RecipientGroup
           label={t('myAccounts')}
           items={ownedAccounts}
-          onSelect={this.selectRecipient}
+          onSelect={this.selectRecipient.bind(this)}
         />
       </div>
     )

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import { displayWarning, requestRevealSeedWords, fetchInfoToSync } from '../../store/actions'
+import { getSelectedAddress } from '../../selectors/selectors'
 import MobileSyncPage from './mobile-sync.component'
 
 const mapDispatchToProps = (dispatch) => {
@@ -11,14 +12,8 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-  const {
-    metamask: {
-      selectedAddress,
-    },
-  } = state
-
   return {
-    selectedAddress,
+    selectedAddress: getSelectedAddress(state),
   }
 }
 

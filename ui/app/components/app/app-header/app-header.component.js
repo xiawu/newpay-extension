@@ -48,7 +48,13 @@ export default class AppHeader extends PureComponent {
   }
 
   renderAccountMenu () {
-    const { isUnlocked, toggleAccountMenu, selectedAddress, disabled, isAccountMenuOpen } = this.props
+    const {
+      isUnlocked,
+      toggleAccountMenu,
+      selectedAddress,
+      disabled,
+      isAccountMenuOpen,
+    } = this.props
 
     return isUnlocked && (
       <div

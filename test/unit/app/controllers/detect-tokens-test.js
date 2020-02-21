@@ -115,7 +115,10 @@ describe('DetectTokensController', function () {
     controller.isOpen = true
     controller.isUnlocked = true
     const stub = sandbox.stub(controller, 'detectNewTokens')
-    await preferences.setSelectedAddress('0xbc86727e770de68b1060c91f6bb6945c73e10388')
+    await preferences.setSelectedAddress({
+      address: '0xbc86727e770de68b1060c91f6bb6945c73e10388',
+      force: true,
+    })
     sandbox.assert.called(stub)
   })
 

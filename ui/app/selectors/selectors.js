@@ -1,16 +1,23 @@
-import { NETWORK_TYPES } from '../helpers/constants/common'
-import { mapObjectValues } from '../../../app/scripts/lib/util'
 import { stripHexPrefix, addHexPrefix } from 'ethereumjs-util'
 import { createSelector } from 'reselect'
-
 import abi from 'human-standard-token-abi'
+
 import { multiplyCurrencies } from '../helpers/utils/conversion-util'
+import { NETWORK_TYPES } from '../helpers/constants/common'
 import {
   addressSlicer,
   checksumAddress,
   formatDate,
   getOriginFromUrl,
 } from '../helpers/utils/util'
+
+import {
+  ENVIRONMENT_TYPE_FULLSCREEN,
+} from '../../../app/scripts/lib/enums'
+import {
+  mapObjectValues,
+  getEnvironmentType,
+} from '../../../app/scripts/lib/util'
 
 import { getPermittedAccounts } from './permissions'
 
@@ -85,25 +92,43 @@ export const getMetaMaskAccounts = createSelector(
   }, {})
 )
 
-export function getSelectedAddress (state) {
-  const selectedAddress = state.metamask.selectedAddress || Object.keys(getMetaMaskAccounts(state))[0]
-
+export function getGlobalSelectedAddress (state) {
+  const selectedAddress = (
+    state.metamask.selectedAddress ||
+    Object.keys(getMetaMaskAccounts(state))[0]
+  )
   return selectedAddress
 }
 
-function lastSelectedAddressSelector (state, origin) {
+function getLastSelectedAddress (state, origin) {
   return state.metamask.lastSelectedAddressByOrigin[origin] || null
 }
 
-// not using reselect here since the returns are contingent;
-// we have no reasons to recompute the permitted accounts if there
-// exists a lastSelectedAddress
-export function getLastSelectedAddress (state, origin) {
-  return (
-    lastSelectedAddressSelector(state, origin) ||
-    getPermittedAccounts(state, origin)[0] || // always returns array
-    getSelectedAddress(state)
-  )
+/**
+ * Gets the first available address of:
+ * - the last selected address for the current origin
+ * - the first permitted account of the current origin (as stored in rpc-cap)
+ * - the globally selected address (this will always return an address)
+ * 
+ * For the fullscreen view, the last selected address is the globally selected
+ * address.
+ * 
+ * @returns {string} The address.
+ */
+export function getSelectedAddress (state) {
+
+  const origin = getOriginOfCurrentTab(state)
+
+  let addressForOrigin
+
+  if (origin && getEnvironmentType() !== ENVIRONMENT_TYPE_FULLSCREEN) {
+    addressForOrigin = (
+      getLastSelectedAddress(state, origin) ||
+      getPermittedAccounts(state, origin)[0] // always returns array
+    )
+  }
+
+  return addressForOrigin || getGlobalSelectedAddress(state)
 }
 
 export function getSelectedIdentity (state) {
@@ -496,8 +521,9 @@ export function getRenderablePermissionsDomains (state) {
     domainMetadata,
     permissionsHistory,
     permissionsDescriptions,
-    selectedAddress,
   } = state.metamask
+
+  const selectedAddress = getSelectedAddress(state)
 
   const renderableDomains = Object.keys(domains).reduce((acc, domainKey) => {
     const { permissions } = domains[domainKey]
@@ -543,6 +569,9 @@ export function getRenderablePermissionsDomains (state) {
   return renderableDomains
 }
 
+/**
+ * @returns {string|undefined} The origin of the current tab.
+ */
 export function getOriginOfCurrentTab (state) {
   const { activeTab } = state
   return activeTab && activeTab.url && getOriginFromUrl(activeTab.url)

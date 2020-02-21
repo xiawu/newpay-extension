@@ -1,9 +1,10 @@
 import { connect } from 'react-redux'
 import ShiftListItem from './shift-list-item.component'
+import { getSelectedAddress } from '../../../selectors/selectors'
 
 function mapStateToProps (state) {
   return {
-    selectedAddress: state.metamask.selectedAddress,
+    selectedAddress: getSelectedAddress(state),
     conversionRate: state.metamask.conversionRate,
     currentCurrency: state.metamask.currentCurrency,
   }

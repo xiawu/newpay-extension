@@ -159,10 +159,19 @@ function checkForError () {
   return new Error(lastError.message)
 }
 
+/**
+ * Get MetaMask's extension id.
+ * @returns {string} MetaMask's extension id.
+ */
+function getOwnExtensionId () {
+  return extension.runtime.id
+}
+
 export {
   removeListeners,
   getPlatform,
   getEnvironmentType,
+  getOwnExtensionId,
   sufficientBalance,
   hexToBn,
   bnToHex,

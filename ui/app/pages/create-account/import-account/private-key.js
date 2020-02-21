@@ -3,7 +3,11 @@ import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import * as actions from '../../../store/actions'
+import {
+  displayWarning,
+  importNewAccount,
+  showAccountDetail,
+} from '../../../store/actions'
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes'
 import { getMetaMaskAccounts } from '../../../selectors/selectors'
 import Button from '../../../components/ui/button'
@@ -140,9 +144,9 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     importNewAccount: (strategy, [ privateKey ]) => {
-      return dispatch(actions.importNewAccount(strategy, [ privateKey ]))
+      return dispatch(importNewAccount(strategy, [ privateKey ]))
     },
-    displayWarning: (message) => dispatch(actions.displayWarning(message || null)),
-    setSelectedAddress: (address) => dispatch(actions.setSelectedAddress(address)),
+    displayWarning: (message) => dispatch(displayWarning(message || null)),
+    setSelectedAddress: (address) => dispatch(showAccountDetail(address)),
   }
 }

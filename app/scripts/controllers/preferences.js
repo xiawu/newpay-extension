@@ -1,7 +1,9 @@
 import ObservableStore from 'obs-store'
-import { addInternalMethodPrefix } from './permissions'
 import { normalize as normalizeAddress } from 'eth-sig-util'
 import { isValidAddress, sha3, bufferToHex } from 'ethereumjs-util'
+
+import { addInternalMethodPrefix } from './permissions'
+import { getOwnExtensionId } from '../lib/util'
 
 class PreferencesController {
 
@@ -228,19 +230,32 @@ class PreferencesController {
    *
    */
   setAddresses (addresses) {
+
     const oldIdentities = this.store.getState().identities
     const oldAccountTokens = this.store.getState().accountTokens
+
+    const removedIdentities = Object.keys(oldIdentities).filter((address) => {
+      return !addresses.includes(address)
+    })
+    this.removeLastSelectedAddresses(removedIdentities)
 
     const identities = addresses.reduce((ids, address, index) => {
       const oldId = oldIdentities[address] || {}
       ids[address] = { name: `Account ${index + 1}`, address, ...oldId }
       return ids
     }, {})
+
     const accountTokens = addresses.reduce((tokens, address) => {
       const oldTokens = oldAccountTokens[address] || {}
       tokens[address] = oldTokens
       return tokens
     }, {})
+
+    if (removedIdentities.includes(this.getSelectedAddress())) {
+      this.setSelectedAddress({
+        address: Object.keys(identities)[0],
+      })
+    }
     this.store.updateState({ identities, accountTokens })
   }
 
@@ -251,20 +266,25 @@ class PreferencesController {
    * @returns {string} - the address that was removed
    */
   removeAddress (address) {
+
     const identities = this.store.getState().identities
     const accountTokens = this.store.getState().accountTokens
+
     if (!identities[address]) {
       throw new Error(`${address} can't be deleted cause it was not found`)
     }
+
     delete identities[address]
     delete accountTokens[address]
+    this.removeLastSelectedAddresses([address])
     this.store.updateState({ identities, accountTokens })
 
     // If the selected account is no longer valid,
     // select an arbitrary other account:
     if (address === this.getSelectedAddress()) {
-      const selected = Object.keys(identities)[0]
-      this.setSelectedAddress(selected)
+      this.setSelectedAddress({
+        address: Object.keys(identities)[0],
+      })
     }
     return address
   }
@@ -311,8 +331,9 @@ class PreferencesController {
       }
     })
 
+    const newlyLostArray = Object.keys(newlyLost)
     // Identities are no longer present.
-    if (Object.keys(newlyLost).length > 0) {
+    if (newlyLostArray.length > 0) {
 
       // Notify our servers:
       if (this.diagnostics) {
@@ -323,6 +344,9 @@ class PreferencesController {
       for (const key in newlyLost) {
         lostIdentities[key] = newlyLost[key]
       }
+
+      // remove lost accounts from selected address history
+      this.removeLastSelectedAddresses(newlyLostArray)
     }
 
     this.store.updateState({ identities, lostIdentities })
@@ -333,7 +357,7 @@ class PreferencesController {
     let selected = this.getSelectedAddress()
     if (!addresses.includes(selected)) {
       selected = addresses[0]
-      this.setSelectedAddress(selected)
+      this.setSelectedAddress({ address: selected })
     }
 
     return selected
@@ -350,25 +374,55 @@ class PreferencesController {
    * Setter for the `selectedAddress` property
    *
    * @param {string} _address - A new hex address for an account
+   * @param {string} _address - A new hex address for an account
    * @returns {Promise<void>} - Promise resolves with tokens
    *
    */
-  setSelectedAddress (_address) {
-    const address = normalizeAddress(_address)
-    this._updateTokens(address)
-    this.store.updateState({ selectedAddress: address })
+  setSelectedAddress ({ address, origin, setGlobal }) {
+
+    if (!address) {
+      console.error('setSelectedAddress called with falsy address!')
+    }
+
+    const normalizedAddress = normalizeAddress(address)
+    this._updateTokens(normalizedAddress)
+
+    if (origin) {
+      this.setLastSelectedAddress(origin, address)
+    }
+
+    if (!origin || setGlobal || !this.getSelectedAddress()) {
+      this.store.updateState({ selectedAddress: normalizedAddress })
+    }
+
     const tokens = this.store.getState().tokens
     return Promise.resolve(tokens)
   }
 
   /**
-   * Getter for the `selectedAddress` property
+   * Getter for the `selectedAddress` property, or the last selected address
+   * by origin, if given an origin.
    *
-   * @returns {string} - The hex address for the currently selected account
+   * @param {string} origin - The origin to retrieve the last selected address
+   * for, if any.
+   * @returns {string} The hex address for the currently selected account.
    *
    */
-  getSelectedAddress () {
-    return this.store.getState().selectedAddress
+  getSelectedAddress (origin) {
+    return (
+      (origin && this.getLastSelectedAddress(origin)) ||
+      this.store.getState().selectedAddress
+    )
+  }
+
+  /**
+   * Gets the last selected address for the given origin, if any.
+   * 
+   * @param {string} origin - The origin to retrieve the last selected address for.
+   * @returns {string|undefined} The last selected address of the given origin.
+   */
+  getLastSelectedAddress (origin) {
+    return this.getState().lastSelectedAddressByOrigin[origin]
   }
 
   /**
@@ -379,6 +433,11 @@ class PreferencesController {
    */
   setLastSelectedAddress (origin, address) {
 
+    // don't set for falsy origins or e.g. chrome-extension://...
+    if (!origin || origin.includes(getOwnExtensionId())) {
+      return
+    }
+
     const { lastSelectedAddressByOrigin } = this.store.getState()
 
     // only update state if it's necessary
@@ -386,6 +445,38 @@ class PreferencesController {
       lastSelectedAddressByOrigin[origin] = address
       this.store.updateState({ lastSelectedAddressByOrigin })
     }
+  }
+
+  /**
+   * Remove the given addresses from the selected address history of all origins.
+   *
+   * @param {Array<string>} addresses - The addresses to remove from history.
+   */
+  removeLastSelectedAddresses (addresses) {
+
+    if (
+      !Array.isArray(addresses) ||
+      (addresses.length > 0 && typeof addresses[0] !== 'string')
+    ) {
+      throw new Error('Expected array of strings')
+    }
+
+    if (addresses.length === 0) {
+      return
+    }
+
+    const { lastSelectedAddressByOrigin } = this.store.getState()
+
+    addresses.forEach((address) => {
+
+      Object.keys(lastSelectedAddressByOrigin).forEach((origin) => {
+        if (lastSelectedAddressByOrigin[origin] === address) {
+          delete lastSelectedAddressByOrigin[origin]
+        }
+      })
+    })
+
+    this.store.updateState({ lastSelectedAddressByOrigin })
   }
 
   /**

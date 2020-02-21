@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import * as actions from '../../../store/actions'
-import { getMetaMaskAccounts } from '../../../selectors/selectors'
+import {
+  checkHardwareStatus,
+  connectHardware,
+  forgetDevice,
+  hideAlert,
+  setHardwareWalletDefaultHdPath,
+  showAlert,
+  unlockHardwareWalletAccount,
+} from '../../../store/actions'
+import { getMetaMaskAccounts, getSelectedAddress } from '../../../selectors/selectors'
 import ConnectScreen from './connect-screen'
 import AccountList from './account-list'
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes'
@@ -238,7 +246,7 @@ ConnectHardwareForm.propTypes = {
 
 const mapStateToProps = (state) => {
   const {
-    metamask: { network, selectedAddress },
+    metamask: { network },
   } = state
   const accounts = getMetaMaskAccounts(state)
   const {
@@ -248,7 +256,7 @@ const mapStateToProps = (state) => {
   return {
     network,
     accounts,
-    address: selectedAddress,
+    address: getSelectedAddress(state),
     defaultHdPaths,
   }
 }
@@ -256,22 +264,22 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setHardwareWalletDefaultHdPath: ({ device, path }) => {
-      return dispatch(actions.setHardwareWalletDefaultHdPath({ device, path }))
+      return dispatch(setHardwareWalletDefaultHdPath({ device, path }))
     },
     connectHardware: (deviceName, page, hdPath) => {
-      return dispatch(actions.connectHardware(deviceName, page, hdPath))
+      return dispatch(connectHardware(deviceName, page, hdPath))
     },
     checkHardwareStatus: (deviceName, hdPath) => {
-      return dispatch(actions.checkHardwareStatus(deviceName, hdPath))
+      return dispatch(checkHardwareStatus(deviceName, hdPath))
     },
     forgetDevice: (deviceName) => {
-      return dispatch(actions.forgetDevice(deviceName))
+      return dispatch(forgetDevice(deviceName))
     },
     unlockHardwareWalletAccount: (index, deviceName, hdPath) => {
-      return dispatch(actions.unlockHardwareWalletAccount(index, deviceName, hdPath))
+      return dispatch(unlockHardwareWalletAccount(index, deviceName, hdPath))
     },
-    showAlert: (msg) => dispatch(actions.showAlert(msg)),
-    hideAlert: () => dispatch(actions.hideAlert()),
+    showAlert: (msg) => dispatch(showAlert(msg)),
+    hideAlert: () => dispatch(hideAlert()),
   }
 }
 

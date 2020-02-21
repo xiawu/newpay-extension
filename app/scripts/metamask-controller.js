@@ -352,7 +352,7 @@ export default class MetamaskController extends EventEmitter {
       // account mgmt
       getAccounts: async ({ origin }) => {
         if (origin === 'metamask') {
-          const selectedAddress = this.preferencesController.getSelectedAddress()
+          const selectedAddress = this.preferencesController.getSelectedAddress(origin)
           return selectedAddress ? [selectedAddress] : []
         } else if (
           this.keyringController.memStore.getState().isUnlocked
@@ -817,7 +817,7 @@ export default class MetamaskController extends EventEmitter {
   selectFirstIdentity () {
     const { identities } = this.preferencesController.store.getState()
     const address = Object.keys(identities)[0]
-    this.preferencesController.setSelectedAddress(address)
+    this.preferencesController.setSelectedAddress({ address })
   }
 
   //
@@ -915,9 +915,12 @@ export default class MetamaskController extends EventEmitter {
     newAccounts.forEach((address) => {
       if (!oldAccounts.includes(address)) {
         // Set the account label to Trezor 1 /  Ledger 1, etc
-        this.preferencesController.setAccountLabel(address, `${deviceName[0].toUpperCase()}${deviceName.slice(1)} ${parseInt(index, 10) + 1}`)
+        this.preferencesController.setAccountLabel(
+          address,
+          `${deviceName[0].toUpperCase()}${deviceName.slice(1)} ${parseInt(index, 10) + 1}`
+        )
         // Select the account
-        this.preferencesController.setSelectedAddress(address)
+        this.preferencesController.setSelectedAddress({ address })
       }
     })
 
@@ -950,7 +953,7 @@ export default class MetamaskController extends EventEmitter {
     this.preferencesController.setAddresses(newAccounts)
     newAccounts.forEach((address) => {
       if (!oldAccounts.includes(address)) {
-        this.preferencesController.setSelectedAddress(address)
+        this.preferencesController.setSelectedAddress({ address })
       }
     })
 
@@ -998,12 +1001,11 @@ export default class MetamaskController extends EventEmitter {
    *
    * @returns {Promise<string>} - The current selected address.
    */
-  async resetAccount () {
-    const selectedAddress = this.preferencesController.getSelectedAddress()
-    this.txController.wipeTransactions(selectedAddress)
+  async resetAccount (address) {
+    this.txController.wipeTransactions(address)
     this.networkController.resetConnection()
 
-    return selectedAddress
+    return address
   }
 
   /**
@@ -1041,7 +1043,9 @@ export default class MetamaskController extends EventEmitter {
     const allAccounts = await this.keyringController.getAccounts()
     this.preferencesController.setAddresses(allAccounts)
     // set new account as selected
-    await this.preferencesController.setSelectedAddress(accounts[0])
+    await this.preferencesController.setSelectedAddress({
+      address: accounts[0],
+    })
   }
 
   /**
@@ -1789,7 +1793,7 @@ export default class MetamaskController extends EventEmitter {
       const oldSelectedAddress = this.preferencesController.getSelectedAddress()
       if (!addresses.includes(oldSelectedAddress)) {
         const address = addresses[0]
-        await this.preferencesController.setSelectedAddress(address)
+        await this.preferencesController.setSelectedAddress({ address })
       }
     }
   }

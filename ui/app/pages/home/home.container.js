@@ -3,7 +3,12 @@ import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { unconfirmedTransactionsCountSelector } from '../../selectors/confirm-transaction'
-import { getCurrentEthBalance, getDaiV1Token, getFirstPermissionRequest } from '../../selectors/selectors'
+import {
+  getCurrentEthBalance,
+  getDaiV1Token,
+  getFirstPermissionRequest,
+  getSelectedAddress,
+} from '../../selectors/selectors'
 import {
   restoreFromThreeBox,
   turnThreeBoxSyncingOn,
@@ -22,7 +27,6 @@ const mapStateToProps = (state) => {
     tokens,
     threeBoxSynced,
     showRestorePrompt,
-    selectedAddress,
   } = metamask
   const accountBalance = getCurrentEthBalance(state)
   const { forgottenPassword, threeBoxLastUpdated } = appState
@@ -42,7 +46,7 @@ const mapStateToProps = (state) => {
     isPopup,
     threeBoxSynced,
     showRestorePrompt,
-    selectedAddress,
+    selectedAddress: getSelectedAddress(state),
     threeBoxLastUpdated,
     hasDaiV1Token: Boolean(getDaiV1Token(state)),
     firstPermissionsRequestId,
