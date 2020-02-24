@@ -135,11 +135,13 @@ export default class PermissionPageContainerContent extends PureComponent {
       titleArgs = [ 'connectingWithMetaMask' ]
     } else if (domainMetadata.extensionId) {
       titleArgs = [ 'externalExtension', [domainMetadata.extensionId] ]
+    } else if (selectedIdentities.length > 1) {
+      titleArgs = ['likeToConnectMultiple', [ domainMetadata.name, selectedIdentities.length ] ]
     } else {
       titleArgs = [
         'likeToConnect', [
           domainMetadata.name,
-          `${selectedIdentities[0].label} (...${selectedIdentities[0].address.slice(selectedIdentities[0].address.length - 4)})`
+          `${selectedIdentities[0].label} (...${selectedIdentities[0].address.slice(selectedIdentities[0].address.length - 4)})`,
         ],
       ]
     }
