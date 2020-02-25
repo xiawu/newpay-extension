@@ -567,6 +567,7 @@ describe('permissions controller', function () {
 
     beforeEach(function () {
       initPermController()
+      initNotifications()
     })
 
     it('successfully exposes accounts and updates permissions history', async function () {
@@ -596,6 +597,13 @@ describe('permissions controller', function () {
         ACCOUNT_ARRAYS.a,
         'eth_accounts entry accounts should be as expected'
       )
+
+      // notification should also have been sent
+      assert.deepEqual(
+        notifications[ORIGINS.a][0],
+        NOTIFICATIONS.newAccounts(ACCOUNT_ARRAYS.a),
+        'first origin should have correct notification'
+      )
     })
 
     it('throws if called on origin with existing exposed accounts', async function () {
@@ -619,6 +627,10 @@ describe('permissions controller', function () {
         permissionsHistory, {},
         'should not have modified history'
       )
+      assert.deepEqual(
+        notifications[ORIGINS.a], [],
+        'should not have sent notification'
+      )
     })
 
     it('throws if called with bad accounts', async function () {
@@ -633,6 +645,10 @@ describe('permissions controller', function () {
       assert.deepEqual(
         permissionsHistory, {},
         'should not have modified history'
+      )
+      assert.deepEqual(
+        notifications[ORIGINS.a], [],
+        'should not have sent notification'
       )
     })
 
@@ -649,6 +665,12 @@ describe('permissions controller', function () {
         permissionsHistory, {},
         'should not have modified history'
       )
+      Object.keys(notifications).forEach((domain) => {
+        assert.deepEqual(
+          notifications[domain], [],
+          'should not have sent notification'
+        )
+      })
     })
   })
 
