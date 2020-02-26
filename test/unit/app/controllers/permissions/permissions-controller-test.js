@@ -6,6 +6,9 @@ import {
   WALLET_PREFIX,
 } from '../../../../../app/scripts/controllers/permissions/enums'
 
+import getRestrictedMethods
+  from '../../../../../app/scripts/controllers/permissions/restrictedMethods'
+
 import {
   addInternalMethodPrefix,
 } from '../../../../../app/scripts/controllers/permissions'
@@ -40,10 +43,10 @@ const initNotifications = () => {
 }
 
 const initPermController = () => {
-  permController = getPermController(
-    getNotifyDomain(notifications),
-    getNotifyAllDomains(notifications),
-  )
+  permController = getPermController({
+    notifyDomain: getNotifyDomain(notifications),
+    notifyAllDomains: getNotifyAllDomains(notifications),
+  })
 }
 
 const mockRequestUserApproval = (id) => {
@@ -1159,6 +1162,30 @@ describe('permissions controller', function () {
       const str = 'foo'
       const res = addInternalMethodPrefix(str)
       assert.equal(res, WALLET_PREFIX + str, 'should prefix correctly')
+    })
+
+    it('eth_accounts restricted method failure', async function () {
+      const restrictedMethods = getRestrictedMethods({
+        getKeyringAccounts: async () => {
+          throw new Error('foo')
+        },
+      })
+
+      const res = {}
+      restrictedMethods.eth_accounts.method(null, res, null, (err) => {
+
+        const fooError = new Error('foo')
+
+        assert.deepEqual(
+          err, fooError,
+          'error should be as expected'
+        )
+
+        assert.deepEqual(
+          res, { error: fooError },
+          'response should have correct error and no message'
+        )
+      })
     })
   })
 })
