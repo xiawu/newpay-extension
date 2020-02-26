@@ -349,8 +349,6 @@ describe('permissions middleware', function () {
 
       const req = rpcRequests.eth_requestAccounts(ORIGINS.a)
       const res = {}
-      // const res = getWatchableObject('response')
-      // const errorPromise = getWatchObjectPromise('response', 'error')
 
       const expectedError = ERRORS.rejectPermissionsRequest.rejection()
 
