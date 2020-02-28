@@ -5,7 +5,7 @@ import MenuBar from '../menu-bar'
 import TransactionViewBalance from '../transaction-view-balance'
 import TransactionList from '../transaction-list'
 
-export default class TransactionView extends PureComponent {
+export default class HomeView extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
   }
@@ -20,12 +20,12 @@ export default class TransactionView extends PureComponent {
 
   render () {
     return (
-      <div className="transaction-view">
+      <div className="home-view">
         <Media
           query="(max-width: 575px)"
           render={() => <MenuBar />}
         />
-        <div className="transaction-view__balance-wrapper">
+        <div className="home-view__balance-wrapper">
           <TransactionViewBalance />
         </div>
         <TransactionList>

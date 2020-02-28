@@ -7,7 +7,7 @@ import HomeNotification from '../../components/app/home-notification'
 import DaiMigrationNotification from '../../components/app/dai-migration-component'
 import MultipleNotifications from '../../components/app/multiple-notifications'
 import WalletView from '../../components/app/wallet-view'
-import TransactionView from '../../components/app/transaction-view'
+import HomeView from '../../components/app/home-view'
 
 import {
   RESTORE_VAULT_ROUTE,
@@ -112,7 +112,7 @@ export default class Home extends PureComponent {
             query="(min-width: 576px)"
             render={() => <WalletView />}
           />
-          <TransactionView>
+          <HomeView>
             <MultipleNotifications>
               {
                 shouldShowSeedPhraseReminder
@@ -161,7 +161,7 @@ export default class Home extends PureComponent {
                   : null
               }
             </MultipleNotifications>
-          </TransactionView>
+          </HomeView>
         </div>
       </div>
     )
