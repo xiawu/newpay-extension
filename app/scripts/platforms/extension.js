@@ -12,9 +12,11 @@ class ExtensionPlatform {
 
   constructor () {
 
-    this.createTab = typeof chrome !== 'undefined'
-      ? pify(extension.tabs.create, CHROME_PIFY_OPTS)
-      : extension.tabs.create
+    if (extension.tabs) {
+      this.createTab = typeof chrome !== 'undefined'
+        ? pify(extension.tabs.create, CHROME_PIFY_OPTS)
+        : extension.tabs.create
+    }
   }
 
   //
