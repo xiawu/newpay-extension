@@ -56,7 +56,7 @@ const sentry = setupSentry({ release })
 
 let popupIsOpen = false
 let notificationIsOpen = false
-const openMetamaskTabsIds = {}
+const openMetamaskTabIds = {}
 const requestAccountTabIds = {}
 
 const originsWithOpenTabs = new Set()
@@ -256,8 +256,8 @@ function setupController (initState, initLangCode) {
     getRequestAccountTabIds: () => {
       return requestAccountTabIds
     },
-    getOpenMetamaskTabsIds: () => {
-      return openMetamaskTabsIds
+    getOpenMetamaskTabIds: () => {
+      return openMetamaskTabIds
     },
     openExtensionInBrowserExternal,
   })
@@ -336,7 +336,7 @@ function setupController (initState, initLangCode) {
   ]
 
   const isClientOpenStatus = () => {
-    return popupIsOpen || Boolean(Object.keys(openMetamaskTabsIds).length) || notificationIsOpen
+    return popupIsOpen || Boolean(Object.keys(openMetamaskTabIds).length) || notificationIsOpen
   }
 
   /**
@@ -385,10 +385,10 @@ function setupController (initState, initLangCode) {
 
       if (processName === ENVIRONMENT_TYPE_FULLSCREEN) {
         const tabId = remotePort.sender.tab.id
-        openMetamaskTabsIds[tabId] = true
+        openMetamaskTabIds[tabId] = true
 
         endOfStream(portStream, () => {
-          delete openMetamaskTabsIds[tabId]
+          delete openMetamaskTabIds[tabId]
           controller.isClientOpen = isClientOpenStatus()
         })
       }
@@ -461,7 +461,7 @@ function setupController (initState, initLangCode) {
  */
 function triggerUi () {
   extension.tabs.query({ active: true }, (tabs) => {
-    const currentlyActiveMetamaskTab = Boolean(tabs.find((tab) => openMetamaskTabsIds[tab.id]))
+    const currentlyActiveMetamaskTab = Boolean(tabs.find((tab) => openMetamaskTabIds[tab.id]))
     if (!popupIsOpen && !currentlyActiveMetamaskTab && !notificationIsOpen) {
       notificationManager.showPopup()
       notificationIsOpen = true

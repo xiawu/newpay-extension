@@ -96,7 +96,7 @@ export default class MetamaskController extends EventEmitter {
     this.openExtensionInBrowserExternal = opts.openExtensionInBrowserExternal
 
     this.getRequestAccountTabIds = opts.getRequestAccountTabIds
-    this.getOpenMetamaskTabsIds = opts.getOpenMetamaskTabsIds
+    this.getOpenMetamaskTabIds = opts.getOpenMetamaskTabIds
 
     // observable state store
     this.store = new ComposableObservableStore(initState)
@@ -577,7 +577,7 @@ export default class MetamaskController extends EventEmitter {
       handleNewAccountSelected: nodeify(this.handleNewAccountSelected, this),
 
       getRequestAccountTabIds: (cb) => cb(null, this.getRequestAccountTabIds()),
-      getOpenMetamaskTabsIds: (cb) => cb(null, this.getOpenMetamaskTabsIds()),
+      getOpenMetamaskTabIds: (cb) => cb(null, this.getOpenMetamaskTabIds()),
     }
   }
 

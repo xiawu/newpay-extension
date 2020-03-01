@@ -4,7 +4,7 @@ import ConnectedSitesList from './connected-sites-list.component'
 import {
   showModal,
   legacyExposeAccounts,
-  getOpenMetamaskTabsIds,
+  getOpenMetamaskTabIds,
 } from '../../../store/actions'
 import {
   getRenderablePermissionsDomains,
@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch) => {
     legacyExposeAccounts: (origin, account) => {
       dispatch(legacyExposeAccounts(origin, [account]))
     },
-    getOpenMetamaskTabsIds: () => dispatch(getOpenMetamaskTabsIds()),
+    getOpenMetamaskTabIds: () => dispatch(getOpenMetamaskTabIds()),
   }
 }
 
