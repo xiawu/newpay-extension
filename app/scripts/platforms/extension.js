@@ -2,8 +2,20 @@ import extension from 'extensionizer'
 import { createExplorerLink as explorerLink } from 'etherscan-link'
 import { getEnvironmentType, checkForError } from '../lib/util'
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../lib/enums'
+import pify from 'pify'
+
+const CHROME_PIFY_OPTS = {
+  errorFirst: false,
+}
 
 class ExtensionPlatform {
+
+  constructor () {
+
+    this.createTab = typeof chrome !== 'undefined'
+      ? pify(extension.tabs.create, CHROME_PIFY_OPTS)
+      : extension.tabs.create
+  }
 
   //
   // Public
@@ -12,8 +24,12 @@ class ExtensionPlatform {
     extension.runtime.reload()
   }
 
-  openWindow ({ url }) {
-    extension.tabs.create({ url })
+  /**
+   * Open new tab in browser with the given URL.
+   * @returns {tabs.Tab} Object with information about the opened tab.
+   */
+  async openWindow ({ url }) {
+    return await this.createTab({ url })
   }
 
   closeCurrentWindow () {
@@ -26,7 +42,14 @@ class ExtensionPlatform {
     return extension.runtime.getManifest().version
   }
 
-  openExtensionInBrowser (route = null, queryString = null) {
+  /**
+   * Opens the extension in a new browser tab.
+   *
+   * @param {string} [route] - The route to add to the extension URL.
+   * @param {string} [queryString] - The query string to add to the extension URL.
+   * @returns {tabs.Tab} Object with information about the opened tab.
+   */
+  async openExtensionInBrowser (route = null, queryString = null) {
     let extensionURL = extension.runtime.getURL('home.html')
 
     if (queryString) {
@@ -36,10 +59,12 @@ class ExtensionPlatform {
     if (route) {
       extensionURL += `#${route}`
     }
-    this.openWindow({ url: extensionURL })
+
     if (getEnvironmentType() !== ENVIRONMENT_TYPE_BACKGROUND) {
       window.close()
     }
+
+    return await this.openWindow({ url: extensionURL })
   }
 
   getPlatformInfo (cb) {

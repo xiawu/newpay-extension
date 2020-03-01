@@ -22,12 +22,14 @@ import {
 
 export class PermissionsController {
 
-  constructor (
-    {
-      platform, notifyDomain, notifyAllDomains, getKeyringAccounts,
-    } = {},
-    restoredPermissions = {},
-    restoredState = {}) {
+  constructor ({
+    getKeyringAccounts,
+    notifyDomain,
+    notifyAllDomains,
+    openExtensionInBrowserExternal,
+  } = {},
+  restoredPermissions = {},
+  restoredState = {}) {
 
     this.store = new ObservableStore({
       [METADATA_STORE_KEY]: restoredState[METADATA_STORE_KEY] || {},
@@ -38,7 +40,7 @@ export class PermissionsController {
     this._notifyDomain = notifyDomain
     this.notifyAllDomains = notifyAllDomains
     this.getKeyringAccounts = getKeyringAccounts
-    this._platform = platform
+    this._openExtensionInBrowserExternal = openExtensionInBrowserExternal
     this._restrictedMethods = getRestrictedMethods(this)
     this.permissionsLogController = new PermissionsLogController({
       restrictedMethods: Object.keys(this._restrictedMethods),
@@ -418,9 +420,12 @@ export class PermissionsController {
        * @param {string} req - The internal rpc-cap user request object.
        */
       requestUserApproval: async (req) => {
-        const { metadata: { id } } = req
+        const { origin, metadata: { id } } = req
 
-        this._platform.openExtensionInBrowser(`connect/${id}`)
+        this._openExtensionInBrowserExternal({
+          origin,
+          route: `connect/${id}`,
+        })
 
         return new Promise((resolve, reject) => {
           this.pendingApprovals[id] = { resolve, reject }

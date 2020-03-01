@@ -93,6 +93,7 @@ export default class MetamaskController extends EventEmitter {
 
     // platform-specific api
     this.platform = opts.platform
+    this.openExtensionInBrowserExternal = opts.openExtensionInBrowserExternal
 
     this.getRequestAccountTabIds = opts.getRequestAccountTabIds
     this.getOpenMetamaskTabsIds = opts.getOpenMetamaskTabsIds
@@ -208,7 +209,7 @@ export default class MetamaskController extends EventEmitter {
 
     this.permissionsController = new PermissionsController({
       getKeyringAccounts: this.keyringController.getAccounts.bind(this.keyringController),
-      platform: opts.platform,
+      openExtensionInBrowserExternal: this.openExtensionInBrowserExternal,
       notifyDomain: this.notifyConnections.bind(this),
       notifyAllDomains: this.notifyAllConnections.bind(this),
     }, initState.PermissionsController, initState.PermissionsMetadata)
