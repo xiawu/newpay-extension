@@ -24,7 +24,11 @@ export class PermissionsController {
 
   constructor (
     {
-      platform, notifyDomain, notifyAllDomains, getKeyringAccounts,
+      getKeyringAccounts,
+      getUnlockPromise,
+      notifyDomain,
+      notifyAllDomains,
+      platform,
     } = {},
     restoredPermissions = {},
     restoredState = {}) {
@@ -37,6 +41,7 @@ export class PermissionsController {
 
     this._notifyDomain = notifyDomain
     this.notifyAllDomains = notifyAllDomains
+    this.getUnlockPromise = getUnlockPromise
     this.getKeyringAccounts = getKeyringAccounts
     this._platform = platform
     this._restrictedMethods = getRestrictedMethods(this)
@@ -66,6 +71,7 @@ export class PermissionsController {
       store: this.store,
       storeKey: METADATA_STORE_KEY,
       getAccounts: this.getAccounts.bind(this, origin),
+      getUnlockPromise: this.getUnlockPromise,
       requestAccountsPermission: this._requestPermissions.bind(
         this, origin, { eth_accounts: {} }
       ),

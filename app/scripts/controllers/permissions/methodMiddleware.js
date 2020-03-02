@@ -5,7 +5,11 @@ import { ethErrors } from 'eth-json-rpc-errors'
  * Create middleware for handling certain methods and preprocessing permissions requests.
  */
 export default function createMethodMiddleware ({
-  store, storeKey, getAccounts, requestAccountsPermission,
+  getAccounts,
+  getUnlockPromise,
+  requestAccountsPermission,
+  store,
+  storeKey,
 }) {
   return createAsyncMiddleware(async (req, res, next) => {
 
@@ -24,6 +28,8 @@ export default function createMethodMiddleware ({
         return
 
       case 'eth_requestAccounts':
+
+        await getUnlockPromise()
 
         // first, just try to get accounts
         let accounts = await getAccounts()
