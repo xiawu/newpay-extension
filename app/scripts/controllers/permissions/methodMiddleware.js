@@ -11,6 +11,9 @@ export default function createMethodMiddleware ({
   store,
   storeKey,
 }) {
+
+  let isProcessingRequestAccounts = false
+
   return createAsyncMiddleware(async (req, res, next) => {
 
     if (typeof req.method !== 'string') {
@@ -29,7 +32,16 @@ export default function createMethodMiddleware ({
 
       case 'eth_requestAccounts':
 
+        if (isProcessingRequestAccounts) {
+          res.error = ethErrors.rpc.resourceUnavailable(
+            'Already processing eth_requestAccounts. Please wait.'
+          )
+          return
+        }
+
+        isProcessingRequestAccounts = true
         await getUnlockPromise()
+        isProcessingRequestAccounts = false
 
         // first, just try to get accounts
         let accounts = await getAccounts()
