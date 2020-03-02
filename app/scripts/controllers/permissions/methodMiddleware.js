@@ -39,8 +39,11 @@ export default function createMethodMiddleware ({
           return
         }
 
-        isProcessingRequestAccounts = true
-        await getUnlockPromise()
+        try {
+          isProcessingRequestAccounts = true
+          await getUnlockPromise()
+        } catch (_) {}
+
         isProcessingRequestAccounts = false
 
         // first, just try to get accounts
