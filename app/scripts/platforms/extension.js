@@ -4,20 +4,11 @@ import { getEnvironmentType, checkForError } from '../lib/util'
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../lib/enums'
 import pify from 'pify'
 
-const CHROME_PIFY_OPTS = {
+const PIFY_OPTS = {
   errorFirst: false,
 }
 
 class ExtensionPlatform {
-
-  constructor () {
-
-    if (extension.tabs) {
-      this.createTab = typeof chrome !== 'undefined'
-        ? pify(extension.tabs.create, CHROME_PIFY_OPTS)
-        : extension.tabs.create
-    }
-  }
 
   //
   // Public
@@ -31,7 +22,7 @@ class ExtensionPlatform {
    * @returns {tabs.Tab} Object with information about the opened tab.
    */
   async openWindow ({ url }) {
-    return await this.createTab({ url })
+    return await pify(extension.tabs.create({ url }), PIFY_OPTS)
   }
 
   closeCurrentWindow () {
@@ -170,7 +161,7 @@ class ExtensionPlatform {
 
   _viewOnEtherscan (txId) {
     if (txId.startsWith('http://')) {
-      extension.tabs.create({ url: txId })
+      this.openWindow({ url: txId })
     }
   }
 }
