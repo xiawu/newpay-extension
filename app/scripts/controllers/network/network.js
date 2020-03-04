@@ -15,14 +15,10 @@ const extend = require('extend')
 const networks = { networkList: {} }
 
 const {
-  ROPSTEN,
-  RINKEBY,
-  KOVAN,
   MAINNET,
-  LOCALHOST,
-  GOERLI,
+  TESTNET,
 } = require('./enums')
-const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, GOERLI]
+const INFURA_PROVIDER_TYPES = [MAINNET, TESTNET]
 
 const env = process.env.METAMASK_ENV
 const METAMASK_DEBUG = process.env.METAMASK_DEBUG
@@ -31,7 +27,7 @@ let defaultProviderConfigType
 if (process.env.IN_TEST === 'true') {
   defaultProviderConfigType = LOCALHOST
 } else if (METAMASK_DEBUG || env === 'test') {
-  defaultProviderConfigType = RINKEBY
+  defaultProviderConfigType = TESTNET
 } else {
   defaultProviderConfigType = MAINNET
 }
@@ -41,7 +37,7 @@ const defaultProviderConfig = {
 }
 
 const defaultNetworkConfig = {
-  ticker: 'ETH',
+  ticker: 'NEW',
 }
 
 module.exports = class NetworkController extends EventEmitter {

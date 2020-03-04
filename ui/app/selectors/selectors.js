@@ -327,14 +327,11 @@ function getIsMainnet (state) {
 function isEthereumNetwork (state) {
   const networkType = getNetworkIdentifier(state)
   const {
-    KOVAN,
     MAINNET,
-    RINKEBY,
-    ROPSTEN,
-    GOERLI,
+    TESTNET,
   } = NETWORK_TYPES
 
-  return [ KOVAN, MAINNET, RINKEBY, ROPSTEN, GOERLI].includes(networkType)
+  return [ MAINNET, TESTNET].includes(networkType)
 }
 
 function preferencesSelector ({ metamask }) {

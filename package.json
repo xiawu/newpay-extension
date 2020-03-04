@@ -178,7 +178,8 @@
     "web3": "^0.20.7",
     "web3-stream-provider": "^4.0.0",
     "webrtc-adapter": "^6.3.0",
-    "xtend": "^4.0.1"
+    "xtend": "^4.0.1",
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -291,7 +292,9 @@
     "through2": "^2.0.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.1"
+    "watchify": "^3.11.1",
+    "newchainjs-util": "^0.1.2",
+    "newchainjs-tx": "^0.1.1"
   },
   "engines": {
     "node": "^10.16.0",
