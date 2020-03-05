@@ -6,7 +6,7 @@ const createBlockCacheMiddleware = require('eth-json-rpc-middleware/block-cache'
 const createInflightMiddleware = require('eth-json-rpc-middleware/inflight-cache')
 const createBlockTrackerInspectorMiddleware = require('eth-json-rpc-middleware/block-tracker-inspector')
 const providerFromMiddleware = require('eth-json-rpc-middleware/providerFromMiddleware')
-const createInfuraMiddleware = require('eth-json-rpc-infura')
+const createInfuraMiddleware = require('newchain-json-rpc')
 const BlockTracker = require('eth-block-tracker')
 
 module.exports = createInfuraClient

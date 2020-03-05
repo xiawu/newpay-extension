@@ -37,6 +37,7 @@
 // }
 const MAINNET = 'mainnet'
 const TESTNET = 'testnet'
+const LOCALHOST = 'localhost'
 
 const MAINNET_CODE = 1012
 const TESTNET_CODE = 1007
@@ -47,6 +48,7 @@ const TESTNET_DISPLAY_NAME = 'NewChain TestNet Network'
 module.exports = {
   MAINNET,
   TESTNET,
+  LOCALHOST,
   MAINNET_CODE,
   TESTNET_CODE,
   MAINNET_DISPLAY_NAME,

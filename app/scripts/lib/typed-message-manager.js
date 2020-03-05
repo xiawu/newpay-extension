@@ -3,7 +3,7 @@ const ObservableStore = require('obs-store')
 const createId = require('./random-id')
 const assert = require('assert')
 const { errors: rpcErrors } = require('eth-json-rpc-errors')
-const sigUtil = require('eth-sig-util')
+const sigUtil = require('newchain-sig-util')
 const log = require('loglevel')
 const jsonschema = require('jsonschema')
 

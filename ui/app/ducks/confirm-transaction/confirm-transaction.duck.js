@@ -21,7 +21,7 @@ import {
 } from '../../helpers/utils/transactions.util'
 
 import { conversionUtil } from '../../helpers/utils/conversion-util'
-import { addHexPrefix } from 'ethereumjs-util'
+import { addHexPrefix } from 'newchainjs-util'
 
 // Actions
 const createActionType = action => `metamask/confirm-transaction/${action}`

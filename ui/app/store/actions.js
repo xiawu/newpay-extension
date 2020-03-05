@@ -6,7 +6,7 @@ const {
   calcTokenBalance,
   estimateGas,
 } = require('../pages/send/send.utils')
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const { fetchLocale } = require('../helpers/utils/i18n-helper')
 const { getMethodDataAsync } = require('../helpers/utils/transactions.util')
 const { fetchSymbolAndDecimals } = require('../helpers/utils/token-util')

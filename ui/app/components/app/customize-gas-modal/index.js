@@ -8,7 +8,7 @@ const actions = require('../../../store/actions')
 const GasModalCard = require('./gas-modal-card')
 import Button from '../../ui/button'
 
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 
 import {
   updateSendErrors,

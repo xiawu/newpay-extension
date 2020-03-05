@@ -20,7 +20,7 @@ const {
   TOKEN_TRANSFER_FUNCTION_SIGNATURE,
 } = require('./send.constants')
 const abi = require('ethereumjs-abi')
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 
 module.exports = {
   addGasBuffer,

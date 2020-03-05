@@ -1,6 +1,6 @@
 /* eslint camelcase: 0 */
 
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 
 const inDevelopment = process.env.NODE_ENV === 'development'
 

@@ -3,7 +3,7 @@ const h = require('react-hyperscript')
 const qrCode = require('qrcode-generator')
 const inherits = require('util').inherits
 const connect = require('react-redux').connect
-const { isHexPrefixed } = require('ethereumjs-util')
+const { isHexPrefixed } = require('newchainjs-util')
 const ReadOnlyInput = require('./readonly-input')
 const { checksumAddress } = require('../../helpers/utils/util')
 

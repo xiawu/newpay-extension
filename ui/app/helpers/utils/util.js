@@ -1,5 +1,5 @@
 const abi = require('human-standard-token-abi')
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const hexToBn = require('../../../../app/scripts/lib/hex-to-bn')
 import { DateTime } from 'luxon'
 import punycode from 'punycode'

@@ -1,4 +1,4 @@
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const { conversionUtil, multiplyCurrencies } = require('../../helpers/utils/conversion-util')
 
 const MIN_GAS_PRICE_DEC = '0'

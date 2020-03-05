@@ -53,7 +53,7 @@ const { hexToBn, bnToHex, BnMultiplyByFraction } = require('../../lib/util')
   @param {Object}  opts.networkStore - an observable store for network number
   @param {Object}  opts.blockTracker - An instance of eth-blocktracker
   @param {Object}  opts.provider - A network provider.
-  @param {Function}  opts.signTransaction - function the signs an ethereumjs-tx
+  @param {Function}  opts.signTransaction - function the signs an newchainjs-tx
   @param {Function}  [opts.getGasPrice] - optional gas price calculator
   @param {Function}  opts.signTransaction - ethTx signer that returns a rawTx
   @param {Number}  [opts.txHistoryLimit] - number *optional* for limiting how many transactions are in state

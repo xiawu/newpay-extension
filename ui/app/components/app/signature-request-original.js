@@ -6,7 +6,7 @@ import { ENVIRONMENT_TYPE_NOTIFICATION } from '../../../../app/scripts/lib/enums
 import { getEnvironmentType } from '../../../../app/scripts/lib/util'
 import Identicon from '../ui/identicon'
 const connect = require('react-redux').connect
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const classnames = require('classnames')
 const { compose } = require('recompose')
 const { withRouter } = require('react-router-dom')

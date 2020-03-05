@@ -1,4 +1,4 @@
-import ethUtil from 'ethereumjs-util'
+import ethUtil from 'newchainjs-util'
 import { ETH, GWEI, WEI } from '../constants/common'
 import { conversionUtil, addCurrencies, subtractCurrencies } from './conversion-util'
 

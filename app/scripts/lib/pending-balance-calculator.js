@@ -1,5 +1,5 @@
-const BN = require('ethereumjs-util').BN
-const normalize = require('eth-sig-util').normalize
+const BN = require('newchainjs-util').BN
+const normalize = require('newchain-sig-util').normalize
 
 class PendingBalanceCalculator {
 

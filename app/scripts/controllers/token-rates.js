@@ -1,7 +1,7 @@
 const ObservableStore = require('obs-store')
 const log = require('loglevel')
-const normalizeAddress = require('eth-sig-util').normalize
-const ethUtil = require('ethereumjs-util')
+const normalizeAddress = require('newchain-sig-util').normalize
+const ethUtil = require('newchainjs-util')
 
 
 // By default, poll every 3 minutes

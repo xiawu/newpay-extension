@@ -11,7 +11,7 @@ const defaultNetworksData = [
   {
     labelKey: 'testnet',
     iconColor: '#FF4A8D',
-    providerType: 'ropsten',
+    providerType: 'testnet',
     rpcUrl: 'https://rpc1.newchain.newtonproject.org',
     chainId: '1007',
     ticker: 'NEW',

@@ -1,5 +1,5 @@
 var iconFactory
-const isValidAddress = require('ethereumjs-util').isValidAddress
+const isValidAddress = require('newchainjs-util').isValidAddress
 const { checksumAddress } = require('../app/helpers/utils/util')
 const contractMap = require('eth-contract-metadata')
 

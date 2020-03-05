@@ -1,4 +1,4 @@
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const assert = require('assert')
 const BN = require('bn.js')
 const {

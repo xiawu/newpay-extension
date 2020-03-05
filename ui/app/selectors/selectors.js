@@ -1,5 +1,5 @@
 import { NETWORK_TYPES } from '../helpers/constants/common'
-import { stripHexPrefix, addHexPrefix } from 'ethereumjs-util'
+import { stripHexPrefix, addHexPrefix } from 'newchainjs-util'
 
 const abi = require('human-standard-token-abi')
 const {

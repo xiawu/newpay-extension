@@ -1,6 +1,6 @@
-const Wallet = require('ethereumjs-wallet')
-const importers = require('ethereumjs-wallet/thirdparty')
-const ethUtil = require('ethereumjs-util')
+const Wallet = require('newchainjs-wallet')
+const importers = require('newchainjs-wallet/thirdparty')
+const ethUtil = require('newchainjs-util')
 
 const accountImporter = {
 

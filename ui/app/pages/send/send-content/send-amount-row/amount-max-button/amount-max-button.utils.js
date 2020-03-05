@@ -2,7 +2,7 @@ const {
   multiplyCurrencies,
   subtractCurrencies,
 } = require('../../../../../helpers/utils/conversion-util')
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 
 function calcMaxAmount ({ balance, gasTotal, selectedToken, tokenBalance }) {
   const { decimals } = selectedToken || {}

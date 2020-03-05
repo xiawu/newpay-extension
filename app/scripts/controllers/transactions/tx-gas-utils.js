@@ -5,7 +5,7 @@ const {
   bnToHex,
 } = require('../../lib/util')
 const log = require('loglevel')
-const { addHexPrefix } = require('ethereumjs-util')
+const { addHexPrefix } = require('newchainjs-util')
 const { SEND_ETHER_ACTION_KEY } = require('../../../../ui/app/helpers/constants/transactions.js')
 const SIMPLE_GAS_COST = '0x5208' // Hex for 21000, cost of a simple send.
 

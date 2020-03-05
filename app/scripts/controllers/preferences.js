@@ -1,6 +1,6 @@
 const ObservableStore = require('obs-store')
-const normalizeAddress = require('eth-sig-util').normalize
-const { isValidAddress, sha3, bufferToHex } = require('ethereumjs-util')
+const normalizeAddress = require('newchain-sig-util').normalize
+const { isValidAddress, sha3, bufferToHex } = require('newchainjs-util')
 const extend = require('xtend')
 
 

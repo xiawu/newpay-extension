@@ -1,4 +1,4 @@
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const ObservableStore = require('obs-store')
 const punycode = require('punycode')
 const log = require('loglevel')

@@ -1,6 +1,6 @@
 const EventEmitter = require('events')
 const ObservableStore = require('obs-store')
-const ethUtil = require('ethereumjs-util')
+const ethUtil = require('newchainjs-util')
 const { errors: rpcErrors } = require('eth-json-rpc-errors')
 const createId = require('./random-id')
 
