@@ -186,7 +186,7 @@
     "newchain-hd-keyring": "latest",
     "newchain-simple-keyring": "latest",
     "newchainjs-tx": "latest",
-    "newchainjs-util": "latest",
+    "newchainjs-util": "^0.1.3",
     "newchainjs-wallet": "latest"
   },
   "devDependencies": {
@@ -301,7 +301,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1",
-    "newchainjs-util": "latest",
+    "newchainjs-util": "^0.1.3",
     "newchainjs-tx": "latest"
   },
   "engines": {
