@@ -19036,10 +19036,10 @@ netmask@^1.0.6:
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
   integrity sha1-ICl+idhvb2QA8lDZ9Pa0wZRfzTU=
 
-newchain-hd-keyring@latest:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/newchain-hd-keyring/-/newchain-hd-keyring-0.1.2.tgz#ec9fe375b31bb83bd1ebd871d957e78fe9e9ea83"
-  integrity sha512-Z/iSUftUb7k9A5YY1hQtv/+snQ22nXNyR/5b6uy28lLYdq/AaxaFLOrZBnr/uPDDfliVTszEVefUSx01m0WjDw==
+newchain-hd-keyring@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/newchain-hd-keyring/-/newchain-hd-keyring-0.1.3.tgz#dafbf54ca437a2476121b0ac6ef21c02d0c8c486"
+  integrity sha512-zWOL9zfcvz17nFl4T8jwgZV77ymTgp1DgC1SeWEfIXIvBdLbULwBOlg2iCiFCJo9tnyFOm3nEk3KdGUVD+BSEg==
   dependencies:
     bip39 "^2.2.0"
     eth-sig-util "^2.4.4"
@@ -19048,13 +19048,13 @@ newchain-hd-keyring@latest:
     ethereumjs-util "^5.1.1"
     ethereumjs-wallet "^0.6.0"
     events "^1.1.1"
-    newchain-sig-util latest
-    newchain-simple-keyring latest
-    newchainjs-util latest
-    newchainjs-wallet latest
+    newchain-sig-util "^0.1.2"
+    newchain-simple-keyring "^0.1.2"
+    newchainjs-util "^0.1.3"
+    newchainjs-wallet "^0.1.1"
     xtend "^4.0.1"
 
-newchain-hdkey@latest:
+newchain-hdkey@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/newchain-hdkey/-/newchain-hdkey-0.1.1.tgz#dbbcd9f5e2ad442d1f273a30826ed27beef6f218"
   integrity sha512-xLysRd9yA09Pz76eUp19wOIPIZYFYX8H/YKGumkC5peF2RM4Bh28Z0tKYrB6EoHvuHGrpOHmARi2nssGXF1Rjw==
@@ -19064,7 +19064,7 @@ newchain-hdkey@latest:
     elliptic "^6.4.1"
     safe-buffer "^5.1.1"
 
-newchain-json-rpc@latest:
+newchain-json-rpc@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/newchain-json-rpc/-/newchain-json-rpc-0.1.0.tgz#f4806c54054125eb872acaa9dda2f5818f68945d"
   integrity sha512-i6ZrSwnJENilkep5jyRbzdKBx0VwAMHwQKJv20cY3Vz1nKjnAI5A02vTfiujEyD6JE0HNZ029S8Rs9TiKSWLqA==
@@ -19074,10 +19074,10 @@ newchain-json-rpc@latest:
     eth-json-rpc-middleware "^4.1.4"
     json-rpc-engine "^5.1.3"
 
-newchain-keyring-controller@latest:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/newchain-keyring-controller/-/newchain-keyring-controller-0.1.2.tgz#832935c8edd492e3b6665f6f8fa1e7bc7f9b6688"
-  integrity sha512-Q88GnlVae/xWvL1GH81/PktrVyxhqq1l+PPWu55fW6zY6K65iyzuXRWFlqtXdORWr6FeMGBNDa5k1/tmymXZLA==
+newchain-keyring-controller@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/newchain-keyring-controller/-/newchain-keyring-controller-0.1.3.tgz#a0aa5cf3a3552aca217e088aa4e40b08cc5f2574"
+  integrity sha512-5PwkPO32FU5YgCyeGn1ljHl1I+AJYADcbE3RaWaNaCjzxBwHzO/XuSqIStzQLcJnF4ZdtF4ddgTTu8Wpmpe0Mw==
   dependencies:
     bip39 "^2.4.0"
     bluebird "^3.5.0"
@@ -19087,48 +19087,48 @@ newchain-keyring-controller@latest:
     eth-simple-keyring "^3.5.0"
     ethereumjs-util "^5.1.2"
     loglevel "^1.5.0"
-    newchain-hd-keyring latest
-    newchain-sig-util latest
-    newchain-simple-keyring latest
-    newchainjs-util latest
+    newchain-hd-keyring "^0.1.3"
+    newchain-sig-util "^0.1.2"
+    newchain-simple-keyring "^0.1.2"
+    newchainjs-util "^0.1.3"
     obs-store "^4.0.3"
 
-newchain-sig-util@latest:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/newchain-sig-util/-/newchain-sig-util-0.1.1.tgz#c328875786460f08476d22a347ead5e1702d7b03"
-  integrity sha512-5r0xB7TTz4z42IEm7ZyVEBooS+V0iYISk70UGXx6Z6guPA64nel4hw6Yfg8meIlId0pH9sc+Ok0O+kvLg0DCOA==
+newchain-sig-util@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/newchain-sig-util/-/newchain-sig-util-0.1.2.tgz#05cb9f6270f080e6454828fc4f2c0ea90349d476"
+  integrity sha512-L/85AGXbG6Uiv5HBBII86iW5N4/jEQ/nBaSNCZrlWDhnYSL0iVPRkZN/wXcZekI8Lep+ZhhHAnkLsgNp73bBdQ==
   dependencies:
     buffer "^5.2.1"
     elliptic "^6.4.0"
     ethereumjs-abi "0.6.5"
     ethereumjs-util "^5.1.1"
-    newchainjs-util latest
+    newchainjs-util "^0.1.3"
     tweetnacl "^1.0.0"
     tweetnacl-util "^0.15.0"
 
-newchain-simple-keyring@latest:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/newchain-simple-keyring/-/newchain-simple-keyring-0.1.1.tgz#3c11acf1e7c0673c81c262fd41a82d8f77ced737"
-  integrity sha512-zqs45KHqxAmYSv76ahiM/6YId+DoZqySj/4t7hR5QONSLyhlkxju9hybLpQfha2VqbkGxAPK2auMXaJ+80CulQ==
+newchain-simple-keyring@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/newchain-simple-keyring/-/newchain-simple-keyring-0.1.2.tgz#844b46e47f09b1b5a2dc427ba8824e7aeb442cd6"
+  integrity sha512-wEZxIOLgYBy/uxQZxhmclMLmWGu6ayIenHLO6PLUUAapuKEigVo8+OEkIwjrVoikfP1YMBayayHhpvY1Rrrvxg==
   dependencies:
     eth-sig-util "^2.5.0"
     ethereumjs-abi "^0.6.5"
     ethereumjs-util "^5.1.1"
     ethereumjs-wallet "^0.6.0"
     events "^1.1.1"
-    newchain-sig-util latest
-    newchainjs-tx latest
-    newchainjs-util latest
-    newchainjs-wallet latest
+    newchain-sig-util "^0.1.2"
+    newchainjs-tx "^0.1.2"
+    newchainjs-util "^0.1.3"
+    newchainjs-wallet "^0.1.1"
     xtend "^4.0.1"
 
-newchainjs-tx@latest:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/newchainjs-tx/-/newchainjs-tx-0.1.1.tgz#9beeb5dde161e5e534d6915435f8526135a2b895"
-  integrity sha512-Nyy9YPYkVIFkQi902r34wm1uTFC0PJfu0h6PmxE656Zl4rWE+cwNzZXhTshgLCxGpnlE02VyuNFHVnK5F5sozA==
+newchainjs-tx@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/newchainjs-tx/-/newchainjs-tx-0.1.2.tgz#4b581dec5024fe0bfe22816b8793812b14df57fb"
+  integrity sha512-0JyUeEiyV9/PSlMuwcy5KmHgrjJelD+E6mNF0waQY3io8xD/3mAYXUdR+VLWaAPFbQEC326iBVVr48y/KHtleA==
   dependencies:
     ethereumjs-common "^0.6.1"
-    newchainjs-util latest
+    newchainjs-util "^0.1.3"
 
 newchainjs-util@^0.1.3:
   version "0.1.3"
@@ -19144,29 +19144,15 @@ newchainjs-util@^0.1.3:
     safe-buffer "^5.1.1"
     user "0.0.0"
 
-newchainjs-util@latest:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/newchainjs-util/-/newchainjs-util-0.1.2.tgz#abd7e1757793fa8ca69a9c9119043065fea1fb98"
-  integrity sha512-bTPbWq/0ulU/c+cbKpz1SKnk7lheNK+NvrdTjt2z+7ktvODdSwsd4mlF7CILU8rhMR95MGKBhRaWPYIU3P385A==
-  dependencies:
-    bn.js "^4.11.0"
-    create-hash "^1.1.2"
-    elliptic "^6.4.1"
-    ethjs-util "0.1.6"
-    keccak "^1.0.2"
-    rlp "^2.0.0"
-    safe-buffer "^5.1.1"
-    user "0.0.0"
-
-newchainjs-wallet@latest:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/newchainjs-wallet/-/newchainjs-wallet-0.1.0.tgz#0f2bf2eea751df1c3a2a61948da00127e37fc14a"
-  integrity sha512-sXYXm4FcW9XtvS2qI332sUAQKeIaPn+6ehFvI08TTwpQhewp8IGwpBlcE+B/7d/tW8XJSiimFJ89E7Kjd0R16g==
+newchainjs-wallet@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/newchainjs-wallet/-/newchainjs-wallet-0.1.1.tgz#7acb768017e82c035e42e4f766c1b47cfa8be141"
+  integrity sha512-Yy7gFwPEtvU3eb9FE7DKmKM6wYiICmi5le54CzfkDwYhzx4HnRkqYNQaW0EgNTG4TOjIdhHuDbAoBFAIckeezA==
   dependencies:
     aes-js "^3.1.1"
     bs58check "^2.1.2"
-    newchain-hdkey latest
-    newchainjs-util latest
+    newchain-hdkey "^0.1.1"
+    newchainjs-util "^0.1.3"
     randombytes "^2.0.6"
     safe-buffer "^5.1.2"
     scrypt.js "^0.3.0"
