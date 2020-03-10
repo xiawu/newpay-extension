@@ -17,6 +17,7 @@ const networks = { networkList: {} }
 const {
   MAINNET,
   TESTNET,
+  LOCALHOST,
 } = require('./enums')
 const INFURA_PROVIDER_TYPES = [MAINNET, TESTNET]
 

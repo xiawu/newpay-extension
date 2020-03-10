@@ -7,10 +7,10 @@ module.exports = function (address, network, rpcPrefs) {
   let link
   switch (net) {
     case 1: // main net
-      link = `https://etherscan.io/address/${address}`
+      link = `https://explorer.newtonproject.org/address/${address}`
       break
     case 2: // morden test net
-      link = `https://morden.etherscan.io/address/${address}`
+      link = `https://explorer.testnet.newtonproject.org/address/${address}`
       break
     case 3: // ropsten test net
       link = `https://ropsten.etherscan.io/address/${address}`
@@ -28,6 +28,6 @@ module.exports = function (address, network, rpcPrefs) {
       link = ''
       break
   }
-
+  console.log('link is:' + link)
   return link
 }
