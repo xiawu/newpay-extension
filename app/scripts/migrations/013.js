@@ -30,7 +30,7 @@ function transformState (state) {
   const { config } = newState
   if (config && config.provider) {
     if (config.provider.type === 'testnet') {
-      newState.config.provider.type = 'ropsten'
+      newState.config.provider.type = 'testnet'
     }
   }
   return newState
