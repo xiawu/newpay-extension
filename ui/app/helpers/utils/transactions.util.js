@@ -6,7 +6,7 @@ import {
   TRANSACTION_TYPE_CANCEL,
   TRANSACTION_STATUS_CONFIRMED,
 } from '../../../../app/scripts/controllers/transactions/enums'
-import prefixForNetwork from '../../../lib/etherscan-prefix-for-network'
+// import prefixForNetwork from '../../../lib/etherscan-prefix-for-network'
 import fetchWithCache from './fetch-with-cache'
 
 import {
@@ -227,6 +227,6 @@ export function getBlockExplorerUrlForTx (networkId, hash, rpcPrefs = {}) {
   if (rpcPrefs.blockExplorerUrl) {
     return `${rpcPrefs.blockExplorerUrl}/tx/${hash}`
   }
-  const prefix = prefixForNetwork(networkId)
-  return `https://${prefix}etherscan.io/tx/${hash}`
+  console.log(networkId)
+  return `https://explorer.testnet.newtonproject.org/tx/${hash}`
 }

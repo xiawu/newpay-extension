@@ -2397,7 +2397,7 @@ function shapeShiftRequest (query, options = {}, cb) {
   shapShiftReq.addEventListener('load', requestListner)
   shapShiftReq.open(method, `https://shapeshift.io/${query}/${options.pair ? options.pair : ''}`, true)
 
-  if (options.method === 'POST') {
+  if (true) {
     var jsonObj = JSON.stringify(options.data)
     shapShiftReq.setRequestHeader('Content-Type', 'application/json')
     return shapShiftReq.send(jsonObj)
