@@ -182,7 +182,7 @@
     "yarn": "^1.22.0",
     "newchain-sig-util": "^0.1.2",
     "newchain-keyring-controller": "^0.1.3",
-    "newchain-json-rpc": "^0.1.0",
+    "newchain-json-rpc": "^0.1.2",
     "newchain-hd-keyring": "^0.1.3",
     "newchain-simple-keyring": "^0.1.2",
     "newchainjs-tx": "^0.1.2",
